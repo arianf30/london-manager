@@ -1,21 +1,28 @@
-import Head from 'next/head'
+import { getSession, signOut } from 'next-auth/react'
 
-export default function Home() {
+export default function Index({ user }) {
+  console.log(user)
   return (
-    <div>
-      <Head>
-        <title>Ingresá a un punto de venta - London Manager</title>
-        <meta name="description" content="Gestioná todos tus puntos de venta desde un solo lugar." />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        HOLA
-      </main>
-
-      <footer>
-        
-      </footer>
-    </div>
+    <>
+      Signed in as {user.email} <br />
+      <button onClick={() => signOut()}>Sign out</button>
+    </>
   )
+}
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context)
+
+  if (!session) return {
+    redirect: {
+      destination: '/login',
+      permanent: false
+    }
+  }
+
+  return {
+    props: {
+      user: session.user
+    }
+  }
 }
