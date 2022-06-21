@@ -1,11 +1,11 @@
-import { DataTypes } from 'sequelize'
-import db from 'db/connection'
+import { DataTypes } from "sequelize"
+import db from "db/connection"
 
-const PointModel = db.define('puntos_de_venta', {
+const PointModel = db.define("puntos_de_venta", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   fecha_registro: DataTypes.DATE,
   id_propietario: DataTypes.INTEGER,
@@ -20,7 +20,7 @@ const PointModel = db.define('puntos_de_venta', {
   razon_social: DataTypes.STRING(60),
   cuit: DataTypes.STRING(15),
   ing_brutos: DataTypes.STRING(15),
-  inicio_actividad: DataTypes.DATE
+  inicio_actividad: DataTypes.DATE,
 })
 
 // PointModel.sync({ force: false, alter: true })
