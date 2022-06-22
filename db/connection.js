@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize"
+import mysql2 from "mysql2"
 
 const db = new Sequelize(
   "u113741966_general",
@@ -7,6 +8,7 @@ const db = new Sequelize(
   {
     host: "sql551.main-hosting.eu",
     dialect: "mysql",
+    dialectModule: mysql2,
     operatorsAliases: false,
     pool: {
       max: 5,
@@ -21,6 +23,7 @@ export const ptvDB = (database, user, pass) => {
   return new Sequelize(database, user, pass, {
     host: "sql551.main-hosting.eu",
     dialect: "mysql",
+    dialectModule: mysql2,
     operatorsAliases: false,
     pool: {
       max: 5,
