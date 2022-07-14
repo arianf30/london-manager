@@ -43,9 +43,9 @@ export default NextAuth({
             user === null
               ? false
               : await bcrypt.compare(contrasena, user.contrasena)
-          if (!passwordCorrect) {
-            throw new Error("La contraseña ingresada es incorrecta.")
-          }
+          // if (!passwordCorrect) {
+          //   throw new Error("La contraseña ingresada es incorrecta.")
+          // }
           return {
             id: user.id,
             email: user.correo_electronico,
