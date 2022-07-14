@@ -24,7 +24,7 @@ export default function Content() {
         <div className="flex flex-wrap content-between w-[33.34%] h-full">
           <SaleControllers qty={qty} updateQty={updateQty} addItem={addItem} />
           <SaleItemsContainer sellItems={sellItems} />
-          <SaleResume />
+          {/* <SaleResume /> */}
         </div>
       </div>
     </>
