@@ -1,51 +1,98 @@
-import usePermissions from 'hooks/usePermissions'
-import { useRouter } from 'next/router'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import axios from "axios"
 
-const PermissionsContext = createContext({})
+const API_ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT
+
+export const PermissionsContext = createContext({})
 
 export function PermissionsProvider({ children }) {
-  const [permissions, setPermissions] = useState(null)
+  const [state, setState] = useState({
+    isLoading: null,
+    isError: null,
+    response: null,
+  })
   const router = useRouter()
   const { ptv } = router.query
-  const { sendGetPermissions, isLoading, isError, response } = usePermissions(ptv)
-  console.log('Punto de venta: ', ptv)
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const permissionsStorage = JSON.parse(window.localStorage.getItem(`permissionsStorage_${ptv}`))
-
-      if (permissionsStorage) {
-        setPermissions(permissionsStorage)
-      } else {
-        sendGetPermissions()
-      }
+  const sendGetPermissions = useCallback(async () => {
+    setState({ isLoading: true, isError: null, response: null })
+    try {
+      const authorizationResponse = await axios(
+        `${API_ENDPOINT}/ptv/${ptv}/user_permissions`
+      )
+      window.localStorage.setItem(
+        `permissionsStorage_${ptv}`,
+        JSON.stringify(authorizationResponse.data.ptvJerarquia)
+      )
+      setState({
+        isLoading: null,
+        isError: null,
+        response: authorizationResponse.data.ptvJerarquia,
+      })
+    } catch (error) {
+      setState({
+        isLoading: null,
+        isError: error,
+        response: null,
+      })
     }
   }, [])
 
   useEffect(() => {
-    resetPermissions()
-  }, [isError])
+    if (ptv) {
+      if (typeof window !== "undefined") {
+        const permissionsStorage = JSON.parse(
+          window.localStorage.getItem(`permissionsStorage_${ptv}`)
+        )
+
+        if (permissionsStorage) {
+          setState({
+            isLoading: null,
+            isError: null,
+            response: permissionsStorage,
+          })
+        } else {
+          sendGetPermissions()
+        }
+      }
+    }
+  }, [ptv])
 
   useEffect(() => {
-    if (response) {
-      window.localStorage.setItem(`permissionsStorage_${ptv}`, JSON.stringify(response))
-      setPermissions(response)
+    if (state.isError) {
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(`permissionsStorage_${ptv}`)
+      }
+      router.push("/profile")
     }
-  }, [response])
+  }, [state.isError])
 
-  const resetPermissions = () => {
+  const sectionPermissions = (sectionName) => {
+    if (state.response) {
+      const permisos = state.response?.permissions
+      return permisos.find((ptv) => ptv.section.nombre === sectionName)
+    }
+    return null
+  }
+
+  const deletePermissions = () => {
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(`permissionsStorage_${ptv}`)
-      setPermissions(null)
     }
+    router.push("/profile")
   }
 
   return (
-    <PermissionsContext.Provider value={{ permissions, resetPermissions }}>
+    <PermissionsContext.Provider
+      value={{
+        permissions: state.response,
+        isLoading: state.isLoading,
+        sectionPermissions,
+        deletePermissions,
+      }}
+    >
       {children}
     </PermissionsContext.Provider>
   )
 }
-
-export default PermissionsContext

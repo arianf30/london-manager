@@ -1,7 +1,6 @@
-import { getSession, signOut } from 'next-auth/react'
+import { getSession, signOut } from "next-auth/react"
 
 export default function Index({ user }) {
-  console.log(user)
   return (
     <>
       Signed in as {user.email} <br />
@@ -13,16 +12,17 @@ export default function Index({ user }) {
 export const getServerSideProps = async (context) => {
   const session = await getSession(context)
 
-  if (!session) return {
-    redirect: {
-      destination: '/login',
-      permanent: false
+  if (!session)
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
     }
-  }
 
   return {
     props: {
-      user: session.user
-    }
+      user: session.user,
+    },
   }
 }

@@ -21,4 +21,5 @@ const UserPtvModel = (ptv) => {
     estado: DataTypes.STRING(15),
   })
 }
+
 export default UserPtvModel

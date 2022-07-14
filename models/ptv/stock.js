@@ -1,25 +1,31 @@
-import { DataTypes } from 'sequelize'
-import { ptvDB } from 'db/connection'
+import { DataTypes } from "sequelize"
+import { ptvDB } from "db/connection"
 
-const db = ptvDB('u113741966_lman_1', 'localhost', '')
+const PASS_HOSTINGER_GLOBAL_BD = process.env.PASS_HOSTINGER_GLOBAL_BD
 
-const StockModel = db.define('stock', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  descripcion_1: DataTypes.TEXT('tiny'),
-  precio_venta: DataTypes.DECIMAL(10, 2)
-},
-  {
-    freezeTableName: true,
-    tableName: 'stock'
-  })
+const StockModel = (ptv) => {
+  const db = ptvDB(
+    `u113741966_lman_${ptv}`,
+    `u113741966_luser_${ptv}`,
+    PASS_HOSTINGER_GLOBAL_BD
+  )
 
-// UserModel.sync({ force: false, alter: true })
-//   .then(() => {
-//     console.log('Tabla usuarios sincronizada.')
-//   })
+  return db.define(
+    "stock",
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      descripcion_1: DataTypes.TEXT("tiny"),
+      precio_venta: DataTypes.DECIMAL(10, 2),
+    },
+    {
+      freezeTableName: true,
+      tableName: "stock",
+    }
+  )
+}
 
 export default StockModel

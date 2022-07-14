@@ -35,10 +35,10 @@ const ptvAuthorization = (handler) => async (req, res) => {
           const dataSection = dataSections.filter((sect) => sect.id == sep[0])
           return {
             section: dataSection[0],
-            read: perms[0],
-            create: perms[1],
-            update: perms[2],
-            delete: perms[3],
+            read: +perms[0],
+            create: +perms[1],
+            update: +perms[2],
+            delete: +perms[3],
           }
         }
       })
