@@ -7,7 +7,7 @@ const ACTIONS = {
   INITIALIZE: "initialize",
   UPDATE_FILTER: "update_filter",
   UPDATE_QTY: "update_qty",
-  UPDATE_SELL_ITEMS: "update_sell_items",
+  UPDATE_SALE_ITEMS: "update_sale_items",
 }
 
 const ACTIONS_REDUCERS = {
@@ -22,9 +22,9 @@ const ACTIONS_REDUCERS = {
     ...state,
     qty: action.payload,
   }),
-  [ACTIONS.UPDATE_SELL_ITEMS]: (state, action) => ({
+  [ACTIONS.UPDATE_SALE_ITEMS]: (state, action) => ({
     ...state,
-    sellItems: [...action.payload],
+    SaleItems: [...action.payload],
   }),
 }
 
@@ -38,7 +38,7 @@ export function VenderProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     filter: null,
     qty: 1,
-    sellItems: [],
+    SaleItems: [],
   })
 
   useEffect(() => {
@@ -78,10 +78,10 @@ export function VenderProvider({ children }) {
     dispatch({ type: ACTIONS.UPDATE_QTY, payload: data })
   }
 
-  // SELL RESUME
+  // SALE RESUME
   const existItem = (id) => {
-    if (state.sellItems) {
-      const found = state.sellItems.find((item) => item.id === id)
+    if (state.SaleItems) {
+      const found = state.SaleItems.find((item) => item.id === id)
       return found
     }
     return null
@@ -96,21 +96,21 @@ export function VenderProvider({ children }) {
   }
 
   const newItem = (item) => {
-    state.sellItems
+    state.SaleItems
       ? dispatch({
-          type: ACTIONS.UPDATE_SELL_ITEMS,
-          payload: [...state.sellItems, { ...item, qty: state.qty }],
+          type: ACTIONS.UPDATE_SALE_ITEMS,
+          payload: [...state.SaleItems, { ...item, qty: state.qty }],
         })
       : dispatch({
-          type: ACTIONS.UPDATE_SELL_ITEMS,
+          type: ACTIONS.UPDATE_SALE_ITEMS,
           payload: [{ ...item, qty: state.qty }],
         })
   }
 
   const incrementItem = (item, qty = 1) => {
     dispatch({
-      type: ACTIONS.UPDATE_SELL_ITEMS,
-      payload: state.sellItems.map((prevItem) => {
+      type: ACTIONS.UPDATE_SALE_ITEMS,
+      payload: state.SaleItems.map((prevItem) => {
         if (prevItem.id === item.id) {
           item.qty = parseFloat(prevItem.qty) + parseFloat(qty)
           return item
@@ -122,8 +122,8 @@ export function VenderProvider({ children }) {
 
   const decrementItem = (item, qty = 1) => {
     dispatch({
-      type: ACTIONS.UPDATE_SELL_ITEMS,
-      payload: state.sellItems.map((prevItem) => {
+      type: ACTIONS.UPDATE_SALE_ITEMS,
+      payload: state.SaleItems.map((prevItem) => {
         if (prevItem.id === item.id && prevItem.qty > 1) {
           item.qty = parseFloat(prevItem.qty) - parseFloat(qty)
           return item
@@ -135,14 +135,14 @@ export function VenderProvider({ children }) {
 
   const removeItem = (id) => {
     dispatch({
-      type: ACTIONS.UPDATE_SELL_ITEMS,
-      payload: state.sellItems.filter((item) => item.id !== id),
+      type: ACTIONS.UPDATE_SALE_ITEMS,
+      payload: state.SaleItems.filter((item) => item.id !== id),
     })
   }
 
   const clearAllItems = () => {
     dispatch({
-      type: ACTIONS.UPDATE_SELL_ITEMS,
+      type: ACTIONS.UPDATE_SALE_ITEMS,
       payload: [],
     })
   }
@@ -154,7 +154,7 @@ export function VenderProvider({ children }) {
         updateFilter,
         qty: state.qty,
         updateQty,
-        sellItems: state.sellItems,
+        SaleItems: state.SaleItems,
         addItem,
         incrementItem,
         decrementItem,

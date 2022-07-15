@@ -1,15 +1,15 @@
-import VenderContext from "context/VenderContext"
 import { useContext } from "react"
+import VenderContext from "context/VenderContext"
 import calcTotal, {
   calcDiscounts,
   calcSubtotal,
 } from "utils/prices/calcResumeSale"
 
 export default function SaleResume() {
-  const { sellItems } = useContext(VenderContext)
-  const subtotal = calcSubtotal(sellItems)
-  const discount = calcDiscounts(sellItems)
-  const total = calcTotal(sellItems)
+  const { saleItems } = useContext(VenderContext)
+  const subtotal = calcSubtotal(saleItems)
+  const discount = calcDiscounts(saleItems)
+  const total = calcTotal(saleItems)
 
   return (
     <>

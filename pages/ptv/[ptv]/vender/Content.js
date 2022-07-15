@@ -6,7 +6,7 @@ import SaleItemsContainer from "components/sections/vender/SaleItemsContainer"
 import SaleResume from "components/sections/vender/SaleResume"
 
 export default function Content() {
-  const { filter, updateFilter, qty, updateQty, sellItems, addItem } =
+  const { filter, updateFilter, qty, updateQty, saleItems, addItem } =
     useContext(VenderContext)
   return (
     <>
@@ -23,8 +23,8 @@ export default function Content() {
         {/* SALE SECTION */}
         <div className="flex flex-wrap content-between w-[33.34%] h-full">
           <SaleControllers qty={qty} updateQty={updateQty} addItem={addItem} />
-          <SaleItemsContainer sellItems={sellItems} />
-          {/* <SaleResume /> */}
+          <SaleItemsContainer saleItems={saleItems} />
+          <SaleResume />
         </div>
       </div>
     </>
