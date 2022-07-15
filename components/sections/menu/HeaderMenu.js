@@ -72,7 +72,11 @@ const HeaderMenu = ({
             size="big"
             shadow={true}
             margin="ml-4"
-            image={userImage}
+            image={
+              userImage
+                ? userImage
+                : "https://londonmanager.com/2021/imagenes/arbol/no-pic.png"
+            }
             altImage="Foto de perfil del usuario"
           />
         </Zoom>

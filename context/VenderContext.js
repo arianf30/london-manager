@@ -24,7 +24,7 @@ const ACTIONS_REDUCERS = {
   }),
   [ACTIONS.UPDATE_SALE_ITEMS]: (state, action) => ({
     ...state,
-    SaleItems: [...action.payload],
+    saleItems: [...action.payload],
   }),
 }
 
@@ -38,7 +38,7 @@ export function VenderProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, {
     filter: null,
     qty: 1,
-    SaleItems: [],
+    saleItems: [],
   })
 
   useEffect(() => {
@@ -80,8 +80,8 @@ export function VenderProvider({ children }) {
 
   // SALE RESUME
   const existItem = (id) => {
-    if (state.SaleItems) {
-      const found = state.SaleItems.find((item) => item.id === id)
+    if (state.saleItems) {
+      const found = state.saleItems.find((item) => item.id === id)
       return found
     }
     return null
@@ -96,10 +96,10 @@ export function VenderProvider({ children }) {
   }
 
   const newItem = (item) => {
-    state.SaleItems
+    state.saleItems
       ? dispatch({
           type: ACTIONS.UPDATE_SALE_ITEMS,
-          payload: [...state.SaleItems, { ...item, qty: state.qty }],
+          payload: [...state.saleItems, { ...item, qty: state.qty }],
         })
       : dispatch({
           type: ACTIONS.UPDATE_SALE_ITEMS,
@@ -110,7 +110,7 @@ export function VenderProvider({ children }) {
   const incrementItem = (item, qty = 1) => {
     dispatch({
       type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.SaleItems.map((prevItem) => {
+      payload: state.saleItems.map((prevItem) => {
         if (prevItem.id === item.id) {
           item.qty = parseFloat(prevItem.qty) + parseFloat(qty)
           return item
@@ -123,7 +123,7 @@ export function VenderProvider({ children }) {
   const decrementItem = (item, qty = 1) => {
     dispatch({
       type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.SaleItems.map((prevItem) => {
+      payload: state.saleItems.map((prevItem) => {
         if (prevItem.id === item.id && prevItem.qty > 1) {
           item.qty = parseFloat(prevItem.qty) - parseFloat(qty)
           return item
@@ -136,7 +136,7 @@ export function VenderProvider({ children }) {
   const removeItem = (id) => {
     dispatch({
       type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.SaleItems.filter((item) => item.id !== id),
+      payload: state.saleItems.filter((item) => item.id !== id),
     })
   }
 
@@ -154,7 +154,7 @@ export function VenderProvider({ children }) {
         updateFilter,
         qty: state.qty,
         updateQty,
-        SaleItems: state.SaleItems,
+        saleItems: state.saleItems,
         addItem,
         incrementItem,
         decrementItem,
