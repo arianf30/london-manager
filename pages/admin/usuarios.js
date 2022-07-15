@@ -7,13 +7,13 @@ import Link from "next/link"
 const ADMIN_LINK = process.env.NEXT_PUBLIC_ADMIN_LINK
 
 export default function Usuarios() {
-  const { sendService, isLoading, hasError, response } = useService(listUsers, {
-    limit: 1000,
-    offset: 0,
-  })
+  const { sendService, isLoading, hasError, response } = useService()
 
   useEffect(() => {
-    sendService()
+    sendService(listUsers, {
+      limit: 1000,
+      offset: 0,
+    })
   }, [])
 
   return (
