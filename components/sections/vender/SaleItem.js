@@ -1,5 +1,5 @@
 import { useContext, useState } from "react"
-import VenderContext from "context/VenderContext"
+import VenderContext from "context/vender"
 import salePriceCalc from "utils/prices/salePriceCalc"
 import articleDiscountCalc from "utils/prices/articleDiscountCalc"
 import priceToShow from "utils/prices/priceToShow"

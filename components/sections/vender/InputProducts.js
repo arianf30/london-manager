@@ -8,8 +8,8 @@ import { useQuery } from "@tanstack/react-query"
 export default function InputProducts({ addItem }) {
   const { ptv } = useRouter().query
   const [query, setQuery] = useState("")
-
   const queryDebounce = useDebounce(query, 500)
+
   const {
     data: response,
     isLoading,
