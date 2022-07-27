@@ -1,38 +1,38 @@
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
-import useService from "hooks/useService"
 import useDebounce from "hooks/useDebounce"
 import { getSearchArticles } from "services/ptv/stock"
 import BasicLoader from "components/svg/loaders/BasicLoader"
+import { useQuery } from "@tanstack/react-query"
 
 export default function InputProducts({ addItem }) {
   const { ptv } = useRouter().query
   const [query, setQuery] = useState("")
 
   const queryDebounce = useDebounce(query, 500)
-  const { sendService, isLoading, response, clearService } = useService()
-  const inputRef = useRef()
-
-  const resetInput = () => {
-    clearService()
-    setQuery("")
-  }
-
-  useEffect(() => {
-    if (query <= 4) {
-      if (response) clearService()
-    }
-  }, [query])
-
-  useEffect(() => {
-    if (query.length >= 4) {
-      sendService(getSearchArticles, {
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useQuery(
+    ["searchArticleSale", ptv],
+    () =>
+      getSearchArticles({
         ptv: ptv,
         query: queryDebounce,
         limit: 5,
-      })
+      }),
+    { enabled: false }
+  )
+
+  const inputRef = useRef()
+
+  useEffect(() => {
+    if (query.length >= 4) {
+      refetch()
     }
-  }, [ptv, queryDebounce])
+  }, [queryDebounce])
 
   useEffect(() => {
     inputRef.current.focus()
@@ -56,7 +56,7 @@ export default function InputProducts({ addItem }) {
         />
       </div>
 
-      {isLoading && query.length >= 4 && (
+      {isFetching && query.length >= 4 && (
         <div className="absolute z-10 flex flex-wrap text-blanco1 left-[10%] top-20 h-auto w-[66%] min-w-[280px] bg-negro3 border-[1px] border-negro2 rounded-md shadow-2xl">
           <div
             className={`flex relative w-full items-center justify-center px-4 py-3 select-none text-blanco1`}

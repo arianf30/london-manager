@@ -1,0 +1,28 @@
+{
+  "theme_color": "#565C9A",
+  "background_color": "#565C9A",
+  "categories": ["productivity", "business", "finance"],
+  "description": "Sistema de Gestión para todo tipo de Empresas",
+  "dir": "ltr",
+  "display_override": ["standalone", "fullscreen"],
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "https://londonmanager.com/favicon.ico",
+      "size": "512x512",
+      "type": "image/ico"
+    },
+    {
+      "src": "https://londonmanager.com/favicon.ico",
+      "size": "192x192",
+      "type": "image/ico"
+    }
+  ],
+  "id": "/v2",
+  "lang": "es-AR",
+  "name": "London Manager",
+  "short_name": "LndMan",
+  "orientation": "portait",
+  "scope": "/",
+  "start_url": "/"
+}

@@ -1,17 +1,19 @@
-import { useContext, useState } from "react"
+import { useState } from "react"
 import { useSession } from "next-auth/react"
-import { PermissionsContext } from "context/PermissionsContext"
 import HeaderMenu from "components/sections/menu/HeaderMenu"
 import CarouselMenu from "components/sections/menu/CarouselMenu"
 import IconsMenu from "components/sections/menu/IconsMenu"
+import useRole from "hooks/useRole"
 
 export default function Menu() {
+  const { permissions } = useRole()
   const [search, setSearch] = useState(null)
   const { data: session } = useSession()
-  const { permissions } = useContext(PermissionsContext)
 
-  if (permissions?.permissions) {
-    const perms = permissions?.permissions
+  const roleInfo = permissions?.ptvJerarquia
+
+  if (roleInfo) {
+    const perms = roleInfo.permissions
     const sectionsAction = perms.filter(
       (sect) => sect?.section.tipo === "accion"
     )
@@ -28,9 +30,9 @@ export default function Menu() {
       >
         <div className="h-full w-full bg-gradient-to-b from-[rgba(0,0,0,0.62)] to-[rgba(0,0,0,0.3]]">
           <HeaderMenu
-            companyName={permissions.companyName}
-            companyAddress={permissions.companyAddress}
-            role={permissions.role}
+            companyName={roleInfo.companyName}
+            companyAddress={roleInfo.companyAddress}
+            role={roleInfo.role}
             userName={session.user.name}
             userImage={session.user.image}
             setSearch={setSearch}
@@ -63,4 +65,3 @@ export default function Menu() {
 }
 
 Menu.auth = true
-Menu.permissions = true

@@ -1,9 +1,29 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const withPWA = require("next-pwa")
+
+// const nextConfig = {
+//   reactStrictMode: true,
+//   images: {
+//     domains: [
+//       "ui-avatars.com",
+//       "londonmanager.com",
+//       "lh3.googleusercontent.com",
+//     ],
+//   },
+// }
+
+module.exports = withPWA({
   reactStrictMode: true,
   images: {
-    domains: ['ui-avatars.com', 'londonmanager.com', 'lh3.googleusercontent.com'],
+    domains: [
+      "ui-avatars.com",
+      "londonmanager.com",
+      "lh3.googleusercontent.com",
+    ],
   },
-}
-
-module.exports = nextConfig
+  pwa: {
+    dest: "public",
+    register: true,
+    skipWaiting: true,
+  },
+})

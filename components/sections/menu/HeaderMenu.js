@@ -1,6 +1,5 @@
 import { useRouter } from "next/router"
 import CircleButton from "components/buttons/CircleButton"
-import { useOnlineStatus } from "hooks/useOnlineStatus"
 import Zoom from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
 
@@ -13,12 +12,14 @@ const HeaderMenu = ({
   setSearch,
 }) => {
   const router = useRouter()
-  const isOnline = useOnlineStatus()
+  const userImageUrl = () => {
+    if (userImage.startsWith("http")) return userImage
+    return `https://londonmanager.com/2021/${userImage}`
+  }
 
   return (
     <div className="flex h-28 border-b-2 border-negro3 px-12 pt-4 bg-[rgba(0,0,0,0.1)] select-none xl:justify-between">
       <div className="w-4/12 flex items-center text-blanco1 xl:w-auto">
-        {/* <div>I am {isOnline ? "online" : "offline"}!</div> */}
         <CircleButton
           theme="primary"
           size="big"
@@ -72,11 +73,7 @@ const HeaderMenu = ({
             size="big"
             shadow={true}
             margin="ml-4"
-            image={
-              userImage
-                ? userImage
-                : "https://londonmanager.com/2021/imagenes/arbol/no-pic.png"
-            }
+            image={userImageUrl()}
             altImage="Foto de perfil del usuario"
           />
         </Zoom>

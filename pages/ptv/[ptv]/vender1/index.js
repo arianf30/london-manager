@@ -1,4 +1,5 @@
 import { VenderProvider } from "context/VenderContext"
+import useRole from "hooks/useRole"
 import SectionNavbar from "components/navbars/SectionNavbar"
 import Content from "./Content"
 
@@ -16,8 +17,9 @@ const itemsDropdown = [
     action: () => console.log("Editar caja"),
   },
 ]
-
 export default function SectionVender() {
+  const { permissions } = useRole("vender")
+
   return (
     <VenderProvider>
       <section className="h-screen">
@@ -29,4 +31,3 @@ export default function SectionVender() {
 }
 
 SectionVender.auth = true
-SectionVender.permissions = true

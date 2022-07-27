@@ -1,32 +1,27 @@
 import { SessionProvider, useSession } from "next-auth/react"
-import { OnlineStatusProvider } from "hooks/useOnlineStatus"
-import { PermissionsProvider } from "context/PermissionsContext"
-import NextNProgress from "nextjs-progressbar"
 import "styles/globals.css"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+
+const queryClient = new QueryClient()
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
   return (
-    <OnlineStatusProvider>
+    <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
-        <NextNProgress />
         {Component.auth ? (
           <Auth>
-            {Component.permissions ? (
-              <PermissionsProvider>
-                <Component {...pageProps} />
-              </PermissionsProvider>
-            ) : (
-              <Component {...pageProps} />
-            )}
+            <Component {...pageProps} />
           </Auth>
         ) : (
           <Component {...pageProps} />
         )}
       </SessionProvider>
-    </OnlineStatusProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 

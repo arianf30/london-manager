@@ -1,22 +1,19 @@
 import { useRouter } from "next/router"
-import { useEffect } from "react"
-import useService from "hooks/useService"
 import { getArticles } from "services/ptv/stock"
 import ItemButton from "components/boards/sale_products/ItemButton"
 import SkeletonProductList from "./skeleton/SkeletonProductList"
+import { useQuery } from "@tanstack/react-query"
 
 export default function ItemListContainer({ filter, addItem }) {
   const { ptv } = useRouter().query
-  const { sendService, isLoading, response } = useService()
-
-  useEffect(() => {
-    sendService(getArticles, {
+  const { data: response, isLoading } = useQuery(["articlesSale", ptv], () =>
+    getArticles({
       ptv: ptv,
       category: filter,
       limit: 500,
       offset: 0,
     })
-  }, [ptv])
+  )
 
   return (
     <div

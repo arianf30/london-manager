@@ -1,20 +1,17 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import useService from "hooks/useService"
 import { getCategories } from "services/ptv/categorias"
 import ListCategoryButton from "components/buttons/ListCategoryButton"
 import BasicLoader from "components/svg/loaders/BasicLoader"
+import { useQuery } from "@tanstack/react-query"
 
 export default function CategoryListContainer({ filter, updateFilter }) {
   const { ptv } = useRouter().query
   const [categorys, setCategorys] = useState([])
-  const { sendService, isLoading, response } = useService()
-
-  useEffect(() => {
-    sendService(getCategories, {
-      ptv: ptv,
-    })
-  }, [ptv])
+  const { data: response, isLoading } = useQuery(
+    ["articlesCategories", ptv],
+    () => getCategories(ptv)
+  )
 
   useEffect(() => {
     if (response) {

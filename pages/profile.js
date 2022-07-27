@@ -1,18 +1,13 @@
-import { useEffect } from "react"
 import { signOut } from "next-auth/react"
 import Image from "next/image"
-import useService from "hooks/useService"
 import Link from "next/link"
-import { completeInfo } from "services/user/complete_info"
 import BasicButton from "components/buttons/BasicButton"
+import { completeInfo } from "services/user/complete_info"
+import { useQuery } from "@tanstack/react-query"
 
 export default function Profile() {
-  const { sendService, isLoading, hasError, response } = useService()
-  const user = response?.data
-
-  useEffect(() => {
-    sendService(completeInfo)
-  }, [])
+  const { data, isError } = useQuery(["completeInfo"], () => completeInfo())
+  const user = data?.data
 
   return (
     <div className="bg-negro2 min-h-screen h-auto overflow-y-auto min-w-screen w-auto overflow-x-hidden select-none">
@@ -26,9 +21,9 @@ export default function Profile() {
         />
       </div>
 
-      {!hasError ? (
+      {!isError ? (
         <>
-          {!isLoading && user ? (
+          {user ? (
             <>
               <div className="flex items-center justify-center mt-7">
                 <div className="inline-block relative bg-negro3 rounded-full drop-shadow-xl h-48 w-48 md:h-24 md:w-24 mr-6">
@@ -150,7 +145,7 @@ export default function Profile() {
           )}
         </>
       ) : (
-        <h4 className="text-rojo text-center">{hasError}</h4>
+        <h4 className="text-rojo text-center">Ocurrió un error inesperado.</h4>
       )}
     </div>
   )

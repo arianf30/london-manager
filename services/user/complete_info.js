@@ -1,7 +1,5 @@
-import axios from 'axios'
-
-const ENDPOINT = process.env.NEXT_PUBLIC_ENDPOINT
+import axios from "axios"
 
 export function completeInfo() {
-  return axios(`${ENDPOINT}/user/complete_info`)
+  return axios("/api/user/complete_info")
 }
