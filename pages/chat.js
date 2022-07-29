@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import SocketIOClient from "socket.io-client"
+import { io } from "socket.io-client"
 
 const user = "User_" + String(new Date().getTime()).substr(-3)
 
@@ -16,7 +16,7 @@ export default function Chat() {
 
   useEffect(() => {
     // connect to socket server
-    const socket = SocketIOClient.connect("", {
+    const socket = io("", {
       path: "/api/socketio",
     })
 
