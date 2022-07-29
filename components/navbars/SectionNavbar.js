@@ -4,20 +4,19 @@ import { useRouter } from "next/router"
 
 export default function SectionNavbar({ title, itemsDropdown }) {
   const router = useRouter()
+  const { pop } = router.query
   return (
-    <header className="relative flex justify-between h-16 bg-slate-800 items-center primary-gradient z-20 select-none">
+    <header className="relative flex justify-between h-16 bg-negro1 items-center z-20 select-none">
       <CircleButton
         theme="transparent"
-        size="large"
+        size="medium"
         color="text-white"
         icon="flecha-izq"
         margin="ml-2"
         shadow={false}
-        action={() => router.back()}
+        action={() => router.push(`/pop/${pop}/menu`)}
       />
-      <h2 className="m-0 text-white">
-        <strong>{title}</strong>
-      </h2>
+      <h2 className="m-0 text-white text-h1b">{title}</h2>
       {itemsDropdown ? (
         <DropdownNavbar items={itemsDropdown} />
       ) : (

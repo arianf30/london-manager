@@ -1,12 +1,12 @@
 import { DataTypes } from "sequelize"
-import { ptvDB } from "db/connection"
+import { popDB } from "db/connection"
 
 const PASS_HOSTINGER_GLOBAL_BD = process.env.PASS_HOSTINGER_GLOBAL_BD
 
-const CategoryModel = (ptv) => {
-  const db = ptvDB(
-    `u113741966_lman_${ptv}`,
-    `u113741966_luser_${ptv}`,
+const CategoryModel = (pop) => {
+  const db = popDB(
+    `u113741966_lman_${pop}`,
+    `u113741966_luser_${pop}`,
     PASS_HOSTINGER_GLOBAL_BD
   )
 

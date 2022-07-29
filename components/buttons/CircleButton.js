@@ -49,7 +49,11 @@ export default function CircleButton({
       {text && text}
       {icon && <div className={`font-icons i-${icon}`} />}
       {iconSVG && (
-        <div className={iconSize ? iconSize : "w-1/2"}>{iconSVG}</div>
+        <div className={iconSize ? iconSize : "w-1/2"}>
+          <svg viewBox={iconSVG.viewBox} xmlns="http://www.w3.org/2000/svg">
+            {iconSVG.svg}
+          </svg>
+        </div>
       )}
       {image && (
         <Image

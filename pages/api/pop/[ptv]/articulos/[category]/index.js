@@ -1,8 +1,8 @@
-import StockModel from "models/ptv/stock"
+import StockModel from "models/pop/stock"
 
 const ArticulosCategoria = async (req, res) => {
-  const { ptv, category, limit = 2, offset = 0 } = req.query
-  const stock = await StockModel(ptv).findAll({
+  const { pop, category, limit = 2, offset = 0 } = req.query
+  const stock = await StockModel(pop).findAll({
     attributes: [
       "id",
       "marca",

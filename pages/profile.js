@@ -83,7 +83,7 @@ export default function Profile() {
                   ].map((item, index) => {
                     if (index < 3) {
                       return (
-                        <Link href={`/ptv/${index}/menu`} key={`ptv-${index}`}>
+                        <Link href={`/pop/${index}/menu`} key={`pos-${index}`}>
                           <a className="group snap-center shrink-0 text-center cursor-pointer bg-transparent md:bg-negro3 p-0 pb-7 md:p-6 rounded-md drop-shadow-md">
                             <div className="inline-block bg-negro1 rounded-full drop-shadow-md group-hover:drop-shadow-xl ease-in duration-150 h-36 w-36">
                               <Image

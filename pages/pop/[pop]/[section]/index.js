@@ -6,7 +6,7 @@ import dropdownSection from "utils/dropdown-content/dropdownSection"
 
 export default function Section() {
   const { section } = useRouter().query
-  const { permissions } = useRole()
+  const { permissions, isLoading, isError } = useRole()
   let Container = null
   let Provider = null
   if (section) {
@@ -19,21 +19,30 @@ export default function Section() {
   }
 
   if (Container) {
-    return (
-      <section className="h-screen">
-        <SectionNavbar
-          title={section}
-          itemsDropdown={dropdownSection(section)}
-        />
-        {Provider ? (
-          <Provider>
+    if (permissions) {
+      console.log(permissions)
+      return (
+        <section className="h-screen">
+          <SectionNavbar
+            title={section}
+            itemsDropdown={dropdownSection(section)}
+          />
+          {Provider ? (
+            <Provider>
+              <Container />
+            </Provider>
+          ) : (
             <Container />
-          </Provider>
-        ) : (
-          <Container />
-        )}
-      </section>
-    )
+          )}
+        </section>
+      )
+    }
+    if (isLoading) {
+      return <p>Cargando permisos...</p>
+    }
+    if (isError) {
+      return <p>No tenés permisos para acceder a esta sección: {section}.</p>
+    }
   }
   return <p>La sección {section} no existe.</p>
 }

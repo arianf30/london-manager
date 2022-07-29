@@ -1,5 +1,6 @@
+import VenderContext from "context/vender"
 import { useContext } from "react"
-import VenderContext from "context/VenderContext"
+import formatPriceNumber from "utils/formatPriceNumber"
 import calcTotal, {
   calcDiscounts,
   calcSubtotal,
@@ -10,6 +11,9 @@ export default function SaleResume() {
   const subtotal = calcSubtotal(saleItems)
   const discount = calcDiscounts(saleItems)
   const total = calcTotal(saleItems)
+
+  const totalString = formatPriceNumber(total).toString()
+  const totalSep = totalString.split(",")
 
   return (
     <>
@@ -38,8 +42,10 @@ export default function SaleResume() {
 
       {/* TOTAL */}
       <div className="flex items-center justify-end w-full h-24 bg-negro2 px-12">
-        <h4 className="text-verde font-bold mr-2">$</h4>
-        <h1 className="text-verde font-bold">{total}</h1>
+        <div className="flex align-top">
+          <h1 className="text-verde font-bold">{totalSep[0]}</h1>
+          <h4 className="text-verde font-bold ml-1">{totalSep[1]}</h4>
+        </div>
       </div>
     </>
   )

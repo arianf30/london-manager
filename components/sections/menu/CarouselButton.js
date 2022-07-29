@@ -5,10 +5,10 @@ import plainText from "utils/plainText"
 
 export default function CarouselButton({ nombre, icono }) {
   const router = useRouter()
-  const { ptv } = router.query
+  const { pop } = router.query
   return (
     <div className="block text-center my-7 md:my-4">
-      <Link href={`/ptv/${ptv}/${plainText(nombre)}`}>
+      <Link href={`/pop/${pop}/${plainText(nombre)}`}>
         <a className="relative inline-flex w-24 h-20 md:w-20 md:h-16 items-center justify-center rounded-xl drop-shadow-md bg-[rgba(20,20,20,0.8)]">
           <div className="relative w-8 h-8 md:w-6 md:h-6 cursor-pointer">
             <Image

@@ -1,11 +1,11 @@
-// import ptvAuthorization from "middleware/ptvAuthorization"
+// import popAuthorization from "middleware/popAuthorization"
 // import withAuthentication from "middleware/withAuthentication"
-import StockModel from "models/ptv/stock"
+import StockModel from "models/pop/stock"
 import { Op } from "sequelize"
 
 const Articulos = async (req, res) => {
-  const { ptv, limit = 20, offset = 0 } = req.query
-  const stock = await StockModel(ptv).findAll({
+  const { pop, limit = 20, offset = 0 } = req.query
+  const stock = await StockModel(pop).findAll({
     offset: +offset,
     limit: +limit,
     attributes: [
@@ -36,5 +36,5 @@ const Articulos = async (req, res) => {
   return res.json(stock)
 }
 
-// export default withAuthentication(ptvAuthorization(Articulos))
+// export default withAuthentication(popAuthorization(Articulos))
 export default Articulos

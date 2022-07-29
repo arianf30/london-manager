@@ -16,7 +16,7 @@ module.exports = {
       colors: {
         transparent: "transparent",
         current: "currentColor",
-        negro1: "#141414",
+        negro1: "#1B1C23",
         negro2: "#292829",
         negro3: "#3D3B3C",
         gris1: "#E6E6E6",
@@ -31,6 +31,52 @@ module.exports = {
         violeta: "#565C9A",
         celeste: "#00A3F5",
         scroll: "rgba(74,72,74,0.6)",
+      },
+      fontSize: {
+        h0: [
+          "48px",
+          {
+            fontWeight: 600,
+          },
+        ],
+        h0b: [
+          "48px",
+          {
+            fontWeight: 900,
+          },
+        ],
+        h1: [
+          "39px",
+          {
+            fontWeight: 700,
+          },
+        ],
+        h2: [
+          "31px",
+          {
+            fontWeight: 700,
+          },
+        ],
+        h3: [
+          "25px",
+          {
+            fontWeight: 700,
+          },
+        ],
+        sl: ["21px"],
+        slb: [
+          "21px",
+          {
+            fontWeight: 700,
+          },
+        ],
+        ss: ["16px"],
+        ssb: [
+          "16px",
+          {
+            fontWeight: 700,
+          },
+        ],
       },
       animation: {
         "spin-slow": "spin 3s linear infinite",

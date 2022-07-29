@@ -13,22 +13,22 @@ export function PermissionsProvider({ children }) {
     response: null,
   })
   const router = useRouter()
-  const { ptv } = router.query
+  const { pop } = router.query
 
   const sendGetPermissions = useCallback(async () => {
     setState({ isLoading: true, isError: null, response: null })
     try {
       const authorizationResponse = await axios(
-        `${API_ENDPOINT}/ptv/${ptv}/user_permissions`
+        `${API_ENDPOINT}/pop/${pop}/user_permissions`
       )
       window.localStorage.setItem(
-        `permissionsStorage_${ptv}`,
-        JSON.stringify(authorizationResponse.data.ptvJerarquia)
+        `permissionsStorage_${pop}`,
+        JSON.stringify(authorizationResponse.data.popJerarquia)
       )
       setState({
         isLoading: null,
         isError: null,
-        response: authorizationResponse.data.ptvJerarquia,
+        response: authorizationResponse.data.popJerarquia,
       })
     } catch (error) {
       setState({
@@ -40,10 +40,10 @@ export function PermissionsProvider({ children }) {
   }, [])
 
   useEffect(() => {
-    if (ptv) {
+    if (pop) {
       if (typeof window !== "undefined") {
         const permissionsStorage = JSON.parse(
-          window.localStorage.getItem(`permissionsStorage_${ptv}`)
+          window.localStorage.getItem(`permissionsStorage_${pop}`)
         )
 
         if (permissionsStorage) {
@@ -57,12 +57,12 @@ export function PermissionsProvider({ children }) {
         }
       }
     }
-  }, [ptv])
+  }, [pop])
 
   useEffect(() => {
     if (state.isError) {
       if (typeof window !== "undefined") {
-        window.localStorage.removeItem(`permissionsStorage_${ptv}`)
+        window.localStorage.removeItem(`permissionsStorage_${pop}`)
       }
       router.push("/profile")
     }
@@ -71,14 +71,14 @@ export function PermissionsProvider({ children }) {
   const sectionPermissions = (sectionName) => {
     if (state.response) {
       const permisos = state.response?.permissions
-      return permisos.find((ptv) => ptv.section.nombre === sectionName)
+      return permisos.find((pop) => pop.section.nombre === sectionName)
     }
     return null
   }
 
   const deletePermissions = () => {
     if (typeof window !== "undefined") {
-      window.localStorage.removeItem(`permissionsStorage_${ptv}`)
+      window.localStorage.removeItem(`permissionsStorage_${pop}`)
     }
     router.push("/profile")
   }

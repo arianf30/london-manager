@@ -1,34 +1,49 @@
 import { useRouter } from "next/router"
 import plainText from "utils/plainText"
-import { userPermissions } from "services/ptv/permissions"
-import { useQuery } from "@tanstack/react-query"
+import { userPermissions } from "services/pop/permissions"
+import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
 
 export default function useRole() {
-  const { ptv, section } = useRouter().query
-  let permissions
-  const { data, isLoading, isError } = useQuery(
-    ["permissions", ptv],
-    () => userPermissions(ptv),
-    { staleTime: Infinity }
+  const { pop, section } = useRouter().query
+  let permissions = null
+  let permissionsSection = null
+  const { data, isLoading, isError, refetch } = useQuery(
+    ["permissions"],
+    () => userPermissions(pop),
+    { staleTime: Infinity, cacheTime: Infinity }
   )
 
   if (data) {
+    permissions = data.data
     if (section) {
-      data.data.ptvJerarquia.permissions.forEach((item) => {
+      data.data.popJerarquia.permissions.forEach((item) => {
         if (item) {
           if (plainText(item.section.nombre) === section) {
-            permissions = item
+            permissionsSection = item
           }
         }
       })
-    } else {
-      permissions = data.data
     }
   }
 
   return {
     permissions,
+    permissionsSection,
     isError,
     isLoading,
+    refetch,
+  }
+}
+
+export const getStaticProps = async (context) => {
+  const { pop } = context.params?.pop
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery(["permissions"], () => userPermissions(pop))
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   }
 }

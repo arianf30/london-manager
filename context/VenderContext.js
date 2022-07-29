@@ -34,7 +34,7 @@ const reducer = (state, action) => {
 }
 
 export function VenderProvider({ children }) {
-  const { ptv } = useRouter().query
+  const { pop } = useRouter().query
   const [state, dispatch] = useReducer(reducer, {
     filter: null,
     qty: 1,
@@ -42,28 +42,28 @@ export function VenderProvider({ children }) {
   })
 
   useEffect(() => {
-    if (ptv !== "undefined") {
+    if (pop !== "undefined") {
       if (typeof window !== undefined) {
         const venderStorage = JSON.parse(
-          window.localStorage.getItem(`venderStorage_${ptv}`)
+          window.localStorage.getItem(`venderStorage_${pop}`)
         )
         if (venderStorage) {
           dispatch({ type: ACTIONS.INITIALIZE, payload: venderStorage })
         } else {
           window.localStorage.setItem(
-            `venderStorage_${ptv}`,
+            `venderStorage_${pop}`,
             JSON.stringify(state)
           )
         }
       }
     }
-  }, [ptv])
+  }, [pop])
 
   useEffect(() => {
-    if (ptv !== "undefined") {
+    if (pop !== "undefined") {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(
-          `venderStorage_${ptv}`,
+          `venderStorage_${pop}`,
           JSON.stringify(state)
         )
       }

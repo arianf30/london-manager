@@ -1,12 +1,12 @@
 import { useRouter } from "next/router"
 import { useEffect, useRef, useState } from "react"
 import useDebounce from "hooks/useDebounce"
-import { getSearchArticles } from "services/ptv/stock"
+import { getSearchArticles } from "services/pop/stock"
 import BasicLoader from "components/svg/loaders/BasicLoader"
 import { useQuery } from "@tanstack/react-query"
 
 export default function InputProducts({ addItem }) {
-  const { ptv } = useRouter().query
+  const { pop } = useRouter().query
   const [query, setQuery] = useState("")
   const queryDebounce = useDebounce(query, 500)
 
@@ -16,10 +16,10 @@ export default function InputProducts({ addItem }) {
     isFetching,
     refetch,
   } = useQuery(
-    ["searchArticleSale", ptv],
+    ["searchArticleSale", pop],
     () =>
       getSearchArticles({
-        ptv: ptv,
+        pop: pop,
         query: queryDebounce,
         limit: 5,
       }),

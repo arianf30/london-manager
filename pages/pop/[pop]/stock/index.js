@@ -1,23 +1,23 @@
 import { useEffect } from "react"
 import { useRouter } from "next/router"
 import useService from "hooks/useService"
-import { getArticles } from "services/ptv/stock"
+import { getArticles } from "services/pop/stock"
 import SectionNavbar from "components/navbars/SectionNavbar"
 import CircleButton from "components/buttons/CircleButton"
 
 export default function Stock() {
-  const { ptv } = useRouter().query
+  const { pop } = useRouter().query
   const { sendService, isLoading, hasError, response } = useService(
     getArticles,
     {
-      ptv: ptv,
+      pop: pop,
       limit: 20,
     }
   )
 
   useEffect(() => {
     sendService()
-  }, [ptv])
+  }, [pop])
 
   return (
     <section className="w-full h-screen bg-blanco3">

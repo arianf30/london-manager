@@ -10,7 +10,7 @@ export default function Menu() {
   const [search, setSearch] = useState(null)
   const { data: session } = useSession()
 
-  const roleInfo = permissions?.ptvJerarquia
+  const roleInfo = permissions?.popJerarquia
 
   if (roleInfo) {
     const perms = roleInfo.permissions

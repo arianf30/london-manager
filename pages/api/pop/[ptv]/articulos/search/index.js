@@ -1,9 +1,9 @@
-import StockModel from "models/ptv/stock"
+import StockModel from "models/pop/stock"
 import { Op, Sequelize } from "sequelize"
 
 const Articulos = async (req, res) => {
-  const { ptv, query, limit = 20 } = req.query
-  const stock = await StockModel(ptv).findAll({
+  const { pop, query, limit = 20 } = req.query
+  const stock = await StockModel(pop).findAll({
     limit: +limit,
     attributes: [
       "id",

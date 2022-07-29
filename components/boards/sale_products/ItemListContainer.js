@@ -1,14 +1,14 @@
 import { useRouter } from "next/router"
-import { getArticles } from "services/ptv/stock"
+import { getArticles } from "services/pop/stock"
 import ItemButton from "components/boards/sale_products/ItemButton"
 import SkeletonProductList from "./skeleton/SkeletonProductList"
 import { useQuery } from "@tanstack/react-query"
 
 export default function ItemListContainer({ filter, addItem }) {
-  const { ptv } = useRouter().query
-  const { data: response, isLoading } = useQuery(["articlesSale", ptv], () =>
+  const { pop } = useRouter().query
+  const { data: response, isLoading } = useQuery(["articlesSale", pop], () =>
     getArticles({
-      ptv: ptv,
+      pop: pop,
       category: filter,
       limit: 500,
       offset: 0,

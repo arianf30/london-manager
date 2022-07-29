@@ -1,27 +1,27 @@
 import PointModel from "models/general/puntos_de_venta"
 import SeccionModel from "models/general/secciones"
 import UserModel from "models/general/usuarios"
-import JerarquiaModel from "models/ptv/jerarquias"
-import UserPtvModel from "models/ptv/usuarios"
+import JerarquiaModel from "models/pop/jerarquias"
+import UserPopModel from "models/pop/usuarios"
 
-const ptvAuthorization = (handler) => async (req, res) => {
-  if (req.query.ptv) {
-    const userPtvs = await UserModel.findOne({
+const popAuthorization = (handler) => async (req, res) => {
+  if (req.query.pop) {
+    const userPops = await UserModel.findOne({
       attributes: ["ptos_vta"],
       where: { id: req.userId },
     })
 
-    const ptvs = userPtvs.ptos_vta.split("/")
-    const encontro = ptvs.filter((ptv) => ptv === req.query.ptv)
+    const pops = userPops.ptos_vta.split("/")
+    const encontro = pops.filter((pop) => pop === req.query.pop)
 
     if (encontro.length) {
-      req.ptvId = req.query.ptv
-      const findPoint = await PointModel.findOne({ where: { id: req.ptvId } })
-      const findJerarquia = await UserPtvModel(req.query.ptv).findOne({
+      req.popId = req.query.pop
+      const findPoint = await PointModel.findOne({ where: { id: req.popId } })
+      const findJerarquia = await UserPopModel(req.query.pop).findOne({
         attributes: ["id_jerarquia"],
         where: { id_usuario: req.userId },
       })
-      const findPermissions = await JerarquiaModel(req.query.ptv).findOne({
+      const findPermissions = await JerarquiaModel(req.query.pop).findOne({
         attributes: ["denominacion", "jerarquia"],
         where: { id: findJerarquia.id_jerarquia },
       })
@@ -42,7 +42,7 @@ const ptvAuthorization = (handler) => async (req, res) => {
           }
         }
       })
-      req.ptvJerarquia = {
+      req.popJerarquia = {
         companyName: findPoint.nombre,
         companyAddress: findPoint.direccion,
         companyImage: findPoint.foto,
@@ -65,4 +65,4 @@ const ptvAuthorization = (handler) => async (req, res) => {
   }
 }
 
-export default ptvAuthorization
+export default popAuthorization

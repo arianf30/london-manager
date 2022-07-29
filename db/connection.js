@@ -19,7 +19,7 @@ const db = new Sequelize(
   }
 )
 
-export const ptvDB = (database, user, pass) => {
+export const popDB = (database, user, pass) => {
   return new Sequelize(database, user, pass, {
     host: "sql551.main-hosting.eu",
     dialect: "mysql",
