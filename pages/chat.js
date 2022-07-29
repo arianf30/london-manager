@@ -16,7 +16,7 @@ export default function Chat() {
 
   useEffect(() => {
     // connect to socket server
-    const socket = SocketIOClient.connect(process.env.BASE_URL, {
+    const socket = SocketIOClient.connect("https://londonmanager.vercel.app", {
       path: "/api/socketio",
     })
 
