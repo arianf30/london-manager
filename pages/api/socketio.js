@@ -1,24 +1,4 @@
-import { Server } from "socket.io"
-
-const ioHandler = (req, res) => {
-  if (!res.socket.server.io) {
-    console.log("*First use, starting socket.io")
-
-    const io = new Server(res.socket.server)
-
-    io.on("connection", (socket) => {
-      socket.broadcast.emit("a user connected")
-      socket.on("hello", (msg) => {
-        socket.emit("hello", "world!")
-      })
-    })
-
-    res.socket.server.io = io
-  } else {
-    console.log("socket.io already running")
-  }
-  res.end()
-}
+import { Server as ServerIO } from "socket.io"
 
 export const config = {
   api: {
@@ -26,4 +6,16 @@ export const config = {
   },
 }
 
-export default ioHandler
+export default async function Socket(req, res) {
+  if (!res.socket.server.io) {
+    console.log("New Socket.io server...")
+    // adapt Next's net Server to http Server
+    const httpServer = res.socket.server
+    const io = new ServerIO(httpServer, {
+      path: "/api/socketio",
+    })
+    // append SocketIO server to Next.js socket server response
+    res.socket.server.io = io
+  }
+  res.end()
+}

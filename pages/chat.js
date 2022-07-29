@@ -16,9 +16,12 @@ export default function Chat() {
 
   useEffect(() => {
     // connect to socket server
-    const socket = io("", {
-      path: "/api/socketio",
-    })
+    let socket
+    if (window !== "undefined") {
+      socket = io("", {
+        path: "/api/socketio",
+      })
+    }
 
     // log socket connection
     socket.on("connect", () => {
