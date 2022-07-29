@@ -3,6 +3,8 @@ import SocketIOClient from "socket.io-client"
 
 const user = "User_" + String(new Date().getTime()).substr(-3)
 
+const PATH_API = process.env.NEXT_PUBLIC_ENDPOINT
+
 // component
 export default function Chat() {
   const inputRef = useRef(null)
@@ -17,7 +19,7 @@ export default function Chat() {
   useEffect(() => {
     // connect to socket server
     const socket = SocketIOClient.connect(process.env.BASE_URL, {
-      path: "/api/socketio",
+      path: `${PATH_API}/socketio`,
     })
 
     // log socket connection
