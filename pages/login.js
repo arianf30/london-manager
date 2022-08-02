@@ -17,7 +17,7 @@ export default function Login() {
   }
 
   return (
-    <div className="bg-negro3">
+    <div className="bg-gs550">
       <Head>
         <title>Iniciar sesión • London Manager</title>
         <meta
@@ -39,21 +39,19 @@ export default function Login() {
                     width={300}
                     alt="Logo London Manager"
                   />
-                  <p className="relative text-xs text-white top-[-8px] mb-7">
+                  <p className="relative text-xs text-blanco top-[-8px] mb-7">
                     Sistema de Gestión On-Line
                   </p>
                 </div>
               </a>
             </Link>
-            <div className="rounded-md drop-shadow-xl text-negro1 select-none">
-              <div className="inline-block bg-white w-full h-auto rounded-t-md px-5 py-6">
-                <h4 className="mt-2 mb-1">
-                  <strong>Iniciar sesión</strong>
-                </h4>
+            <div className="rounded-md drop-shadow-xl text-gs700 select-none">
+              <div className="inline-block bg-blanco w-full h-auto rounded-t-md px-5 py-6">
+                <h3 className="font-bold mt-2 mb-1">Iniciar sesión</h3>
                 <p className="text-sm">
                   ¿No tenés cuenta?{" "}
                   <Link href="/signup">
-                    <a className="text-sm text-violeta underline-offset-2 hover:underline">
+                    <a className="text-sm text-p500 underline-offset-2 hover:underline">
                       Registrarte
                     </a>
                   </Link>{" "}
@@ -61,7 +59,7 @@ export default function Login() {
                 </p>
 
                 {error && (
-                  <p className="text-xs text-rojo text-center mt-4 mb-[-1rem]">
+                  <p className="text-xs text-e400 text-center mt-4 mb-[-1rem]">
                     {error}
                   </p>
                 )}
@@ -97,7 +95,7 @@ export default function Login() {
                           value={props.values.correo_electronico}
                           name="correo_electronico"
                           id="correo_electronico"
-                          className="w-full text-sm h-[40px] px-5 rounded-sm bg-blanco3 border-2 border-gris1 focus:border-violeta focus:outline-none appearance-none placeholder-negro3 text-negro3 transition ease-in duration-150"
+                          className="w-full text-sm h-[40px] px-5 rounded-sm bg-gs200 border-2 border-gs400 focus:border-p500 focus:outline-none appearance-none placeholder-gs550 text-gs550 transition ease-in duration-150"
                           placeholder="Correo electrónico"
                         />
                       </div>
@@ -109,7 +107,7 @@ export default function Login() {
                           value={props.values.contrasena}
                           name="contrasena"
                           id="contrasena"
-                          className="w-full text-sm h-[40px] px-5 rounded-sm bg-blanco3 border-2 border-gris1 focus:border-violeta focus:outline-none appearance-none placeholder-negro3 text-negro3 transition ease-in duration-150"
+                          className="w-full text-sm h-[40px] px-5 rounded-sm bg-gs200 border-2 border-gs400 focus:border-p500 focus:outline-none appearance-none placeholder-gs550 text-gs550 transition ease-in duration-150"
                           placeholder="Contraseña"
                         />
                         <button
@@ -118,7 +116,7 @@ export default function Login() {
                           onClick={toggleShowPass}
                         >
                           <div
-                            className={showPass ? "text-violeta" : "text-gris2"}
+                            className={showPass ? "text-p500" : "text-gs300"}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -137,13 +135,13 @@ export default function Login() {
 
                       <div className="mt-4">
                         {props.isSubmitting ? (
-                          <div className="flex items-center justify-center text-blanco1 h-[40px] text-center w-full bg-gris2 rounded-sm">
+                          <div className="flex items-center justify-center text-blanco h-[40px] text-center w-full bg-gs300 rounded-sm">
                             Ingresando...
                           </div>
                         ) : (
                           <button
                             type="submit"
-                            className="text-blanco1 h-[40px] text-center w-full bg-gradient-to-r from-violeta hover:from-verde to-violeta rounded-sm hover:drop-shadow-md transition ease-linear duration-300"
+                            className="text-blanco h-[40px] text-center w-full bg-gradient-to-r from-p500 hover:from-s400 to-p500 rounded-sm hover:drop-shadow-md transition ease-linear duration-300"
                           >
                             Ingresar
                           </button>
@@ -155,19 +153,19 @@ export default function Login() {
 
                 <div className="mt-4 text-center">
                   <Link href="/recuperar_clave">
-                    <a className="text-sm text-violeta underline-offset-2 hover:underline">
+                    <a className="text-sm text-p500 underline-offset-2 hover:underline">
                       No recuerdo mi contraseña
                     </a>
                   </Link>
                 </div>
               </div>
 
-              <div className="flex-grow border-t-2 border-gris2"></div>
+              <div className="flex-grow border-t-2 border-gs300"></div>
 
-              <div className="inline-block bg-white w-full h-auto rounded-b-md px-5 py-6">
+              <div className="inline-block bg-blanco w-full h-auto rounded-b-md px-5 py-6">
                 <button
                   onClick={() => signIn("google")}
-                  className="flex h-[40px] items-center justify-center w-full text-center border-2 border-gris2 rounded-md hover:bg-blanco3"
+                  className="flex h-[40px] items-center justify-center w-full text-center border-2 border-gs300 rounded-md hover:bg-gs200"
                 >
                   <div className="w-6 h-6 mr-3 bg-[url('/img/system/icons/google.svg')] bg-no-repeat bg-contain bg-center"></div>
                   <p className="text-xs">

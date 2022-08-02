@@ -13,13 +13,25 @@ export default function IconsMenu({ sections, search }) {
     return (
       <div className="flex justify-center mt-20">
         <div className="grid grid-cols-4 gap-x-16 place-content-center">
-          {results.slice(0, 12).map((item, index) => (
-            <CarouselButton
-              key={index}
-              nombre={item.section.nombre}
-              icono={item.section.icono}
-            />
-          ))}
+          {results.slice(0, 12).map((item, index) => {
+            if (item != null && item.read > 0) {
+              let disabled = true
+              if (
+                item.section.nombre === "Mesas" ||
+                item.section.nombre === "Vender" ||
+                item.section.nombre === "Mostrador"
+              ) {
+                disabled = false
+              }
+              return (
+                <CarouselButton
+                  key={index}
+                  nombre={item.section.nombre}
+                  disabled={disabled}
+                />
+              )
+            }
+          })}
         </div>
       </div>
     )

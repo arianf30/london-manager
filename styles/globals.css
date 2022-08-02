@@ -1,186 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
-@font-face {
-  font-family: "iconos_londonmanager";
-  src: url("/fonts/iconos_londonmanager.eot");
-  src: url("/fonts/iconos_londonmanager.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/iconos_londonmanager.woff") format("woff"),
-    url("/fonts/iconos_londonmanager.ttf") format("truetype"),
-    url("/fonts/iconos_londonmanager.svg#icomoon") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
+
 @tailwind base;
 @layer base {
   h1 {
-    @apply text-5xl;
+    @apply text-h1;
   }
   h2 {
-    @apply text-4xl;
+    @apply text-h2;
   }
   h3 {
-    @apply text-3xl;
-  }
-  h4 {
-    @apply text-2xl;
-  }
-  h5 {
-    @apply text-xl;
-  }
-  h6 {
-    @apply text-lg;
+    @apply text-h3;
   }
   p,
   a {
-    @apply text-base;
+    @apply text-bl;
   }
   label {
-    @apply text-sm;
+    @apply text-ll;
   }
   caption {
-    @apply text-xs;
+    @apply text-cap;
   }
 }
 @tailwind components;
 @tailwind utilities;
-
-.i-calendario:before {
-  content: "\e800";
-}
-.i-candado:before {
-  content: "\e801";
-}
-.i-cerrar:before {
-  content: "\e802";
-}
-.i-comentario:before {
-  content: "\e803";
-}
-.i-cuenta:before {
-  content: "\e804";
-}
-.i-delivery:before {
-  content: "\e805";
-}
-.i-descargar:before {
-  content: "\e806";
-}
-.i-editar:before {
-  content: "\e807";
-}
-.i-eliminar:before {
-  content: "\e808";
-}
-.i-enlace:before {
-  content: "\e809";
-}
-.i-enviar:before {
-  content: "\e80a";
-}
-.i-factura-clasica:before {
-  content: "\e80b";
-}
-.i-flecha-abajo:before {
-  content: "\e80c";
-}
-.i-flechita-arriba:before {
-  content: "\e80d";
-}
-.i-flecha-diagonal:before {
-  content: "\e80e";
-}
-.i-flecha-izq:before {
-  content: "\e80f";
-}
-.i-imprimir:before {
-  content: "\e810";
-}
-.i-llave-permiso:before {
-  content: "\e811";
-}
-.i-lupa:before {
-  content: "\e812";
-}
-.i-nuevo:before {
-  content: "\e813";
-}
-.i-opciones:before {
-  content: "\e814";
-}
-.i-reloj:before {
-  content: "\e815";
-}
-.i-tique:before {
-  content: "\e816";
-}
-.i-ver:before {
-  content: "\e817";
-}
-.i-vista-lista:before {
-  content: "\e818";
-}
-.i-vista-mosaico:before {
-  content: "\e819";
-}
-.i-ingresos:before {
-  content: "\e81a";
-}
-.i-promociones-vendidas:before {
-  content: "\e81b";
-}
-.i-flecha-derecha-fin:before {
-  content: "\e81c";
-}
-.i-costos:before {
-  content: "\e81d";
-}
-.i-flecha-derecha:before {
-  content: "\e81e";
-}
-.i-flecha-izquierda-fin:before {
-  content: "\e81f";
-}
-.i-lista:before {
-  content: "\e820";
-}
-.i-nueva-carpeta:before {
-  content: "\e821";
-}
-.i-nuevo-plus:before {
-  content: "\e822";
-}
-.i-nuevo-cuadro:before {
-  content: "\e823";
-}
-.i-pesos-i:before {
-  content: "\e824";
-}
-.i-porcentaje:before {
-  content: "\e825";
-}
-.i-pesos:before {
-  content: "\e826";
-}
-.i-recargar:before {
-  content: "\e827";
-}
-.i-cantidad-articulos:before {
-  content: "\e828";
-}
-.i-editar-usuario:before {
-  content: "\e829";
-}
-.i-billete:before {
-  content: "\e82a";
-}
-.i-candado-abierto:before {
-  content: "\e82b";
-}
-.i-flechita-abajo:before {
-  content: "\e82c";
-}
-.i-info-circulo:before {
-  content: "\e82d";
-}
 
 /* Embla Carousel */
 .embla {

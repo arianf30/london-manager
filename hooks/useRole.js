@@ -2,13 +2,15 @@ import { useRouter } from "next/router"
 import plainText from "utils/plainText"
 import { userPermissions } from "services/pop/permissions"
 import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
+import { useSession } from "next-auth/react"
 
 export default function useRole() {
+  const { data: session } = useSession()
   const { pop, section } = useRouter().query
   let permissions = null
   let permissionsSection = null
   const { data, isLoading, isError, refetch } = useQuery(
-    ["permissions"],
+    ["permissions", session.id, +pop],
     () => userPermissions(pop),
     { staleTime: Infinity, cacheTime: Infinity }
   )

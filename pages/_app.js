@@ -1,6 +1,7 @@
 import { SessionProvider, useSession } from "next-auth/react"
 import "styles/globals.css"
 import { QueryClient } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister"
 
@@ -39,6 +40,7 @@ export default function App({
           <Component {...pageProps} />
         )}
       </SessionProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </PersistQueryClientProvider>
   )
 }

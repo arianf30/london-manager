@@ -10,6 +10,7 @@ export default async function CompleteInfo(req, res) {
         "correo_electronico",
         "nombre",
         "apellido",
+        "foto",
         "direccion",
         "red_social",
       ],

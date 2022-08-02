@@ -1,30 +1,19 @@
 import { useCallback, useEffect, useState } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import CarouselButton from "./CarouselButton"
-import { motion } from "framer-motion"
 
-const inactiveItemsStyle =
-  "inline-block text-xs text-gris3 px-3 font-light cursor-pointer hover:text-blanco1"
-const aciveItemsStyle = "inline-block text-2xl text-blanco1 px-3 font-bold"
-const motionItem = {
-  first: {
-    left: 80,
-    transition: {
-      type: "Inertia",
-    },
-  },
-  second: {
-    left: 10,
-    transition: {
-      type: "Inertia",
-    },
-  },
-  third: {
-    left: -70,
-    transition: {
-      type: "Inertia",
-    },
-  },
+const dotsText = {
+  0: "operar",
+  1: "administrar",
+  2: "configurar",
+}
+const styleDots = {
+  active: "text-h3 opacity-100 font-bold",
+  inactive: "text-bs opacity-60 font-normal",
+}
+const styleDotsPoint = {
+  active: "w-2 h-2 mt-1 opacity-100",
+  inactive: "w-0 h-0 mt-0 opacity-0",
 }
 
 export default function CarouselMenu({
@@ -47,20 +36,28 @@ export default function CarouselMenu({
   }, [embla, onSelect])
 
   return (
-    <div className="embla overflow-hidden" ref={emblaRef}>
+    <div className="embla overflow-hidden max-w-[660px]" ref={emblaRef}>
       <div className="embla__container flex">
         {/* SLIDE 1 */}
         <div className="embla__slide relative mx-auto">
           <div className="flex justify-center mt-20 md:mt-10">
             <div className="w-[600px] md:w-auto">
-              <div className="grid grid-cols-4 md:grid-cols-3 gap-x-16 md:gap-x-8 sm:gap-x-0 place-content-center">
+              <div className="grid grid-cols-4 md:grid-cols-3 gap-x-14 md:gap-x-8 sm:gap-x-0 place-content-center">
                 {sectionsAction.map((item, index) => {
                   if (item != null && item.read > 0) {
+                    let disabled = true
+                    if (
+                      item.section.nombre === "Mesas" ||
+                      item.section.nombre === "Vender" ||
+                      item.section.nombre === "Mostrador"
+                    ) {
+                      disabled = false
+                    }
                     return (
                       <CarouselButton
-                        key={index}
+                        key={`menu-slide-${index}`}
                         nombre={item.section.nombre}
-                        icono={item.section.icono}
+                        disabled={disabled}
                       />
                     )
                   }
@@ -76,11 +73,19 @@ export default function CarouselMenu({
               <div className="grid grid-cols-4 md:grid-cols-3 gap-x-16 md:gap-x-8 sm:gap-x-0 place-content-center">
                 {sectionsResults.map((item, index) => {
                   if (item != null && item.read > 0) {
+                    let disabled = true
+                    if (
+                      item.section.nombre === "Mesas" ||
+                      item.section.nombre === "Vender" ||
+                      item.section.nombre === "Mostrador"
+                    ) {
+                      disabled = false
+                    }
                     return (
                       <CarouselButton
-                        key={index}
+                        key={`menu-slide-${index}`}
                         nombre={item.section.nombre}
-                        icono={item.section.icono}
+                        disabled={disabled}
                       />
                     )
                   }
@@ -95,12 +100,22 @@ export default function CarouselMenu({
             <div className="w-[600px] md:w-auto">
               <div className="grid grid-cols-4 md:grid-cols-3 gap-x-16 md:gap-x-8 sm:gap-x-0 place-content-center">
                 {sectionsConfiguration.map((item, index) => {
+                  console.log(item)
                   if (item != null && item.read > 0) {
+                    if (item.section.nombre === "Jerarquías") return
+                    let disabled = true
+                    if (
+                      item.section.nombre === "Mesas" ||
+                      item.section.nombre === "Vender" ||
+                      item.section.nombre === "Mostrador"
+                    ) {
+                      disabled = false
+                    }
                     return (
                       <CarouselButton
-                        key={index}
+                        key={`menu-slide-${index}`}
                         nombre={item.section.nombre}
-                        icono={item.section.icono}
+                        disabled={disabled}
                       />
                     )
                   }
@@ -112,44 +127,33 @@ export default function CarouselMenu({
         {/* FIN SLIDES */}
       </div>
       {/* BOTONES */}
-      <div className="relative w-full h-auto text-center mt-6">
-        <motion.div
-          className={`relative inline-block h-auto w-auto text-blanco1 text-center`}
-          variants={motionItem}
-          animate={() => {
-            if (selectedIndex === 0) return "first"
-            if (selectedIndex === 1) return "second"
-            if (selectedIndex === 2) return "third"
-          }}
-        >
-          <span
-            onClick={() => embla.scrollTo(0)}
-            className={`${
-              selectedIndex === 0 ? aciveItemsStyle : inactiveItemsStyle
-            }`}
+      <div className="relative flex justify-center items-top gap-8 mt-16 mb-8">
+        {[0, 1, 2].map((i) => (
+          <div
+            className="relative"
+            key={`dot-${i}`}
+            onClick={() => embla.scrollTo(i)}
           >
-            operar
-          </span>
-          <span
-            onClick={() => embla.scrollTo(1)}
-            className={`${
-              selectedIndex === 1 ? aciveItemsStyle : inactiveItemsStyle
-            }`}
-          >
-            administrar
-          </span>
-          <span
-            onClick={() => embla.scrollTo(2)}
-            className={`${
-              selectedIndex === 2 ? aciveItemsStyle : inactiveItemsStyle
-            }`}
-          >
-            configurar
-          </span>
-        </motion.div>
-        <div className="text-center">
-          <div className="inline-block w-2 h-2 rounded-full bg-blanco1" />
-        </div>
+            <div className="flex flex-col items-center">
+              <button
+                className={`flex h-8 items-end text-blanco transition ease-in-out ${
+                  selectedIndex === i ? styleDots.active : styleDots.inactive
+                }`}
+                style={{ transition: "font-size .33s" }}
+              >
+                {dotsText[i]}
+              </button>
+              <div
+                className={`relative rounded-full bg-blanco ${
+                  selectedIndex === i
+                    ? styleDotsPoint.active
+                    : styleDotsPoint.inactive
+                }`}
+                style={{ transition: ".33s, opacity .33s" }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

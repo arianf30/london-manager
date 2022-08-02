@@ -1,112 +1,68 @@
-import { signOut } from "next-auth/react"
-import Image from "next/image"
 import Link from "next/link"
-import BasicButton from "components/buttons/BasicButton"
-import { completeInfo } from "services/user/complete_info"
-import { useQuery } from "@tanstack/react-query"
+import useUserCompleteInfo from "hooks/querys/user/useUserCompleteInfo"
+import HeaderProfile from "components/headers/HeaderProfile"
+import Avatar from "components/avatars/Avatar"
+import NewPop from "components/buttons/NewPop"
+import SecondaryButton from "components/buttons/SecondaryButton"
 
 export default function Profile() {
-  const { data, isError } = useQuery(["completeInfo"], () => completeInfo())
-  const user = data?.data
+  const { user, isError } = useUserCompleteInfo()
 
   return (
-    <div className="bg-negro2 min-h-screen h-auto overflow-y-auto min-w-screen w-auto overflow-x-hidden select-none">
-      <div className="text-right p-5 pr-8">
-        <BasicButton
-          size="sm"
-          text="Cerrar sesión"
-          iconBG="bg-[url('/img/system/icons/cerrar_sesion.svg')]"
-          color="text-rojo"
-          action={() => signOut()}
-        />
-      </div>
-
+    <div className="bg-[#262626] min-h-screen h-auto overflow-y-auto min-w-screen w-auto overflow-x-hidden select-none">
       {!isError ? (
         <>
           {user ? (
             <>
-              <div className="flex items-center justify-center mt-7">
-                <div className="inline-block relative bg-negro3 rounded-full drop-shadow-xl h-48 w-48 md:h-24 md:w-24 mr-6">
-                  <Image
-                    className="object-cover rounded-full"
-                    src={
-                      user.foto
-                        ? user.foto
-                        : `https://ui-avatars.com/api/?name=${user.nombre}+${user.apellido}&background=565C9A&color=fff&size=256`
-                    }
-                    layout="fill"
-                    alt={`${user.nombre} ${user.apellido}`}
-                  />
-                </div>
-
-                <div className="inline-block ml-5 md:ml-0">
-                  <p className="text-blanco1 text-xs mb-1">
-                    {user.red_social ? `@${user.red_social}` : "@Bienvenido"}
-                  </p>
-                  <h2 className="text-blanco1 text-4xl md:text-2xl font-bold">
-                    {user.nombre} {user.apellido}
-                  </h2>
-                  <p className="md:hidden text-gris3 mt-2">
-                    {user.correo_electronico}
-                  </p>
-                  <p className="md:hidden text-gris3">
-                    {user.direccion
-                      ? user.direccion
-                      : "Por favor complete su dirección"}
-                  </p>
-                  <BasicButton
-                    size="sm"
-                    text="Editar perfil"
-                    icon="editar"
-                    color="text-violeta"
-                    action={() => alert("editar perfil")}
-                  />
-                </div>
-              </div>
-
-              <div className="border-y-[1px] box-border border-negro3 text-center h-[49px] mt-20 md:mt-10">
-                <p className="inline-flex items-center h-full text-blanco1 font-bold box-border border-y-[3px] border-t-transparent border-b-violeta px-8">
-                  PUNTOS DE VENTA
-                </p>
-              </div>
-
-              <div className="flex w-screen py-14 justify-center">
-                <div className="flex justify-center md:justify-start text-center pb-12 px-0 md:px-7 w-[1064px] md:w-full xl:w-[696px] gap-10 md:gap-7 snap-x snap-mandatory overflow-x-auto scrollbar-thin scrollbar-thumb-transparent hover:scrollbar-thumb-scroll scrollbar-thumb-rounded-full scrollbar-track-transparent">
-                  {[
-                    "Maraluga",
-                    "London Manager",
-                    "Saboratto",
-                    "Donkey Rocks",
-                    "Paseo Wynwood",
-                    "Pepe Guapo",
-                    "Nuevo Origen",
-                  ].map((item, index) => {
-                    if (index < 3) {
+              <HeaderProfile
+                name={`${user.nombre} ${user.apellido}`}
+                email={user.correo_electronico}
+                avatar={`https://londonmanager.com/2021/${user.foto}`}
+              />
+              <div className="relative h-[calc(100vh_-_105px)] bg-gs600">
+                <h1 className="font-bold text-blanco text-center pt-[7%] pb-[6%]">
+                  ¡Bienvenid@ {user.nombre}! 👋
+                </h1>
+                <h4 className="text-sl text-blanco text-center mb-12">
+                  ¿A qué punto de venta querés ingresar?
+                </h4>
+                <div className="flex justify-center gap-6">
+                  {["Maraluga", "London Manager", "Saboratto"].map(
+                    (item, index) => {
                       return (
                         <Link href={`/pop/${index}/menu`} key={`pos-${index}`}>
-                          <a className="group snap-center shrink-0 text-center cursor-pointer bg-transparent md:bg-negro3 p-0 pb-7 md:p-6 rounded-md drop-shadow-md">
-                            <div className="inline-block bg-negro1 rounded-full drop-shadow-md group-hover:drop-shadow-xl ease-in duration-150 h-36 w-36">
-                              <Image
-                                className="object-cover rounded-full"
-                                src={`https://ui-avatars.com/api/?name=${item}&background=F2AF29&color=222&size=256`}
-                                layout="fill"
-                                alt={`${item}`}
-                              />
-                            </div>
-                            <p className="text-blanco1 text-center mt-1">
+                          <a className="w-[120px]">
+                            <Avatar type="pop" size="2xl" shadow={true} />
+                            <p className="text-sr text-gs300 text-center mt-2 truncate">
                               {item}
                             </p>
                           </a>
                         </Link>
                       )
                     }
-                  })}
+                  )}
+                  <NewPop
+                    action={() =>
+                      alert("Disculpas. Estamos construyendo esta sección.")
+                    }
+                  />
+                </div>
+                <div className="absolute w-full flex items-center justify-center bottom-16">
+                  <span className="text-cap text-blanco mr-5">
+                    ¡Instalá el sistema en tu compu y accedé más fácil y rápido!
+                  </span>
+                  <SecondaryButton
+                    text="Descargar"
+                    size="sm"
+                    theme="light"
+                    icon="downloadCloud"
+                  />
                 </div>
               </div>
             </>
           ) : (
             <>
-              <div className="animate-pulse flex items-center justify-center mt-7">
+              {/* <div className="animate-pulse flex items-center justify-center mt-7">
                 <div className="inline-block relative bg-negro3 rounded-full drop-shadow-xl h-48 w-48 md:h-24 md:w-24 mr-6"></div>
 
                 <div className="inline-block ml-5 md:ml-0">
@@ -140,7 +96,7 @@ export default function Profile() {
                     <p className="inline-block bg-negro3 h-4 w-28 mt-4 rounded-lg" />
                   </div>
                 </div>
-              </div>
+              </div> */}
             </>
           )}
         </>
