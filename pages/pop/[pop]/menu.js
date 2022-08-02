@@ -3,6 +3,7 @@ import HeaderMenu from "components/headers/HeaderMenu"
 import CarouselMenu from "components/sections/menu/CarouselMenu"
 import IconsMenu from "components/sections/menu/IconsMenu"
 import useRole from "hooks/useRole"
+import Icon from "components/svg/Icon"
 
 export default function Menu() {
   const { permissions } = useRole()
@@ -52,6 +53,21 @@ export default function Menu() {
               search={search}
             />
           )}
+          <a
+            className="fixed right-0 bottom-[87px] h-[123px] w-8 flex flex-col items-center justify-center bg-p500 rounded-l-[4px]"
+            target="_blank"
+            href="https://api.whatsapp.com/send?phone=+5493704708043&text=%C2%A1Hola!%20Estoy%20en%20London%20Manager%20y%20necesito%20ayuda%20%F0%9F%98%84"
+            rel="noopener noreferrer"
+          >
+            <div className="flex items-center justify-center h-[85px] w-6">
+              <span className="block whitespace-nowrap text-bxs text-blanco -rotate-90">
+                Necesito ayuda
+              </span>
+            </div>
+            <div className="">
+              <Icon svg="help" classes="h-3 text-blanco mt-1" />
+            </div>
+          </a>
         </div>
       </div>
     )

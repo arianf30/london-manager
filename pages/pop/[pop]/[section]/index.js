@@ -6,7 +6,7 @@ import dropdownSection from "utils/dropdown-content/dropdownSection"
 
 export default function Section() {
   const { section } = useRouter().query
-  const { permissions, isLoading, isError } = useRole()
+  const { permissions, permissionsSection, isLoading, isError } = useRole()
   let Container = null
   let Provider = null
   if (section) {
@@ -20,11 +20,15 @@ export default function Section() {
 
   if (Container) {
     if (permissions) {
-      console.log(permissions)
       return (
         <section className="h-screen">
           <SectionNavbar
             title={section}
+            popInfo={{
+              name: permissions?.popJerarquia.companyName,
+              image: permissions?.popJerarquia.companyImage,
+            }}
+            permissions={permissionsSection}
             itemsDropdown={dropdownSection(section)}
           />
           {Provider ? (

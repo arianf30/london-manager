@@ -3,12 +3,12 @@ export default function dropdownSection(section) {
     case "vender":
       return [
         {
-          icon: "nuevo",
+          icon: "logOut",
           text: "Nueva cliente",
           action: () => console.log("Nueva cliente"),
         },
         {
-          icon: "editar",
+          icon: "logOut",
           text: "Editar caja",
           action: () => console.log("Editar caja"),
         },

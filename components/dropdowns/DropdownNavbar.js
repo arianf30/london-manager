@@ -32,7 +32,7 @@ export default function DropdownNavbar({ items = [], orientation = "right" }) {
         {open && (
           <motion.div
             id="dropdown-content-navbar"
-            className={`absolute bg-blanco h-auto w-auto z-20 ${orientation}-0 mt-12 px-1 py-2 rounded-[4px] drop-shadow-[0px_4px_8px_rgba(10,10,20,0.08)]`}
+            className={`absolute bg-blanco h-auto w-auto z-20 ${orientation}-0 mt-9 px-1 py-2 rounded-[4px] drop-shadow-[0px_4px_8px_rgba(10,10,20,0.08)]`}
             initial={{ top: -5, opacity: 0 }}
             animate={{ top: 0, opacity: 1 }}
             exit={{ top: 5, opacity: 0 }}

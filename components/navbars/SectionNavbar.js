@@ -1,35 +1,48 @@
-import CircleButton from "components/buttons/CircleButton"
-import DropdownNavbar from "components/dropdowns/DropdownNavbar"
 import { useRouter } from "next/router"
+import Avatar from "components/avatars/Avatar"
+import IconButtonCircle from "components/buttons/IconButtonCircle"
+import DropdownNavbar from "components/dropdowns/DropdownNavbar"
+import ImageZoom from "react-medium-image-zoom"
+import "react-medium-image-zoom/dist/styles.css"
 
-export default function SectionNavbar({ title, itemsDropdown }) {
+export default function SectionNavbar({
+  title,
+  popInfo,
+  permissions,
+  itemsDropdown,
+}) {
   const router = useRouter()
   const { pop } = router.query
   return (
-    <header className="relative flex justify-between h-16 bg-negro1 items-center z-20 select-none">
-      <CircleButton
-        theme="transparent"
-        size="medium"
-        color="text-white"
-        icon="flecha-izq"
-        margin="ml-2"
-        shadow={false}
+    <header className="relative flex justify-between h-16 px-4 bg-gs700 items-center z-20 select-none">
+      <IconButtonCircle
+        icon="arrowLeft"
+        size="lg"
+        theme="dark"
         action={() => router.push(`/pop/${pop}/menu`)}
       />
-      <h2 className="m-0 text-white text-h1b">{title}</h2>
-      {itemsDropdown ? (
-        <DropdownNavbar items={itemsDropdown} />
-      ) : (
-        <CircleButton
-          margin="mr-2"
-          theme="transparent"
-          size="large"
-          color="text-white"
-          icon="opciones"
-          shadow={false}
-          action={null}
+      <h1 className="text-blanco font-bold">{title}</h1>
+
+      <div className="flex h-full items-center gap-1">
+        <IconButtonCircle
+          icon="downloadCloud"
+          size="lg"
+          theme="dark"
+          action={() => router.push(`/pop/${pop}/menu`)}
         />
-      )}
+        <DropdownNavbar items={itemsDropdown} />
+        <div className="flex ml-3">
+          <ImageZoom overlayBgColorEnd="rgba(0, 0, 0, 0.95)" zoomMargin={40}>
+            <Avatar
+              type="user"
+              avatar={`https://londonmanager.com/2021/${popInfo?.image}`}
+              alt={popInfo?.name}
+              size="base"
+              shadow={true}
+            />
+          </ImageZoom>
+        </div>
+      </div>
     </header>
   )
 }
