@@ -1,11 +1,22 @@
 import CategoryListContainer from "./CategoryListContainer"
 import ItemListContainer from "./ItemListContainer"
 
-export default function BoardSaleProducts({ filter, updateFilter, addItem }) {
+export default function BoardSaleProducts({
+  filter,
+  updateFilter,
+  layout,
+  updateLayout,
+  addItem,
+}) {
   return (
     <>
-      <CategoryListContainer filter={filter} updateFilter={updateFilter} />
-      <ItemListContainer filter={filter} addItem={addItem} />
+      <CategoryListContainer
+        filter={filter}
+        updateFilter={updateFilter}
+        layout={layout}
+        updateLayout={updateLayout}
+      />
+      <ItemListContainer filter={filter} layout={layout} addItem={addItem} />
     </>
   )
 }

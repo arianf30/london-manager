@@ -1,13 +1,14 @@
 const THEMES = {
-  active:
-    "flex w-full h-12 items-center cursor-pointer text-base text-amarillo uppercase px-3 font-semibold transition ease-in-out bg-[rgba(0,0,0,0.2)] border-r-4 border-amarillo",
-  inactive:
-    "flex w-full h-12 items-center cursor-pointer text-base text-gris2 uppercase px-3 font-semibold hover:text-blanco1 transition ease-in-out",
+  active: "text-blanco bg-gs700 border-r-4 border-p500",
+  inactive: "text-gs300",
 }
 
 export default function ListCategoryButton({ item, state, action }) {
   return (
-    <button className={THEMES[state]} onClick={action}>
+    <button
+      className={`flex w-full h-[46px] items-center text-ss font-bold uppercase px-4 transition ease-in-out ${THEMES[state]}`}
+      onClick={action}
+    >
       {item}
     </button>
   )

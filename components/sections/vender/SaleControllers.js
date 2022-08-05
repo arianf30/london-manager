@@ -1,42 +1,33 @@
 import InputQty from "components/sections/vender/InputQty"
 import InputProducts from "components/sections/vender/InputProducts"
-import CircleButton from "components/buttons/CircleButton"
-import svgs from "components/svg"
-import Link from "next/link"
 import { useRouter } from "next/router"
+import IconRectangleButton from "components/buttons/IconRectangleButton"
 
 export default function SaleControllers({ qty, updateQty, addItem }) {
-  const { pop, section } = useRouter().query
+  const router = useRouter()
+  const { pop, section } = router.query
   return (
-    <div className="relative flex items-center justify-around w-full h-24 bg-negro2">
-      <InputQty qty={qty} updateQty={updateQty} />
-      <InputProducts addItem={addItem} />
+    <div className="flex items-center justify-between w-full h-24 bg-gs600 px-4">
+      <div className="relative flex h-full w-[calc(100%_-_138px)] items-center gap-2">
+        <InputQty qty={qty} updateQty={updateQty} />
+        <InputProducts addItem={addItem} />
+      </div>
 
-      <Link
-        href="/pop/[pop]/[section]?modal=cobrar"
-        as={`/pop/${pop}/${section}?modal=cobrar`}
-      >
-        <a>
-          <CircleButton
-            iconSVG={svgs["caja"]}
-            bg="bg-verde"
-            size="big2"
-            color="text-blanco1"
-            shadow={true}
-            theme="zoom"
-          />
-        </a>
-      </Link>
-
-      <CircleButton
-        iconSVG={svgs["cruz"]}
-        iconSize="w-2/5"
-        bg="bg-rojo"
-        size="large"
-        color="text-blanco1"
-        shadow={true}
-        theme="zoom"
-      />
+      <div className="flex items-center justify-between gap-4 min-w-[111px]">
+        <IconRectangleButton
+          size="xl"
+          icon="caja"
+          classes="bg-s400"
+          classesBox="p-[10%]"
+          action={() => router.push(`/pop/${pop}/${section}?modal=cobrar`)}
+        />
+        <IconRectangleButton
+          size="lg"
+          icon="trash"
+          classes="bg-e500"
+          action={() => router.push(`/pop/${pop}/${section}?modal=cobrar`)}
+        />
+      </div>
     </div>
   )
 }

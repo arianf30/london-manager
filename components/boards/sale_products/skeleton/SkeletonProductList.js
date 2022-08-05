@@ -4,7 +4,7 @@ export default function SkeletonProductList() {
       {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => {
         return (
           <div className="" key={index}>
-            <div className="relative h-64 w-full animate-pulse bg-negro3 rounded-2xl" />
+            <div className="relative h-[244px] w-full animate-pulse bg-gs550 rounded-lg" />
           </div>
         )
       })}

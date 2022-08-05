@@ -1,14 +1,18 @@
 import { useRouter } from "next/router"
-import CircleButton from "components/buttons/CircleButton"
 import ImageZoom from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
 import Avatar from "components/avatars/Avatar"
 import useUserCompleteInfo from "hooks/querys/user/useUserCompleteInfo"
 import HomeButton from "components/buttons/HomeButton"
-import svgs from "components/svg"
-import SearchSvg from "components/svg/icons/SearchSvg"
+import InputIconDark from "components/inputs/InputIconDark"
 
-const HeaderMenu = ({ companyName, companyAddress, role, setSearch }) => {
+const HeaderMenu = ({
+  companyName,
+  companyAddress,
+  role,
+  search,
+  setSearch,
+}) => {
   const { user } = useUserCompleteInfo()
   const name = `${user?.nombre} ${user?.apellido[0]}.`
 
@@ -36,15 +40,12 @@ const HeaderMenu = ({ companyName, companyAddress, role, setSearch }) => {
       </div>
       <div className="w-4/12 flex items-center justify-center xl:w-auto lg:hidden">
         <div className="group relative w-[265px]">
-          <input
-            type="text"
-            className="flex items-center w-full h-8 pl-9 pr-3 border-[1px] border-gs300 bg-[rgba(27,28,35,0.4)] rounded-lg text-[12px] focus:border-s400 outline-none caret-s400 text-blanco"
-            placeholder="Buscar sección"
-            onChange={(e) => setSearch(e.target.value)}
+          <InputIconDark
+            inputPlaceholder="Buscar sección"
+            icon="search"
+            classesIcon="h-3"
+            change={(e) => setSearch(e.target.value)}
           />
-          <div className="absolute left-[14px] top-2 text-gs300 mr-2 group-focus-within:text-s400">
-            <SearchSvg />
-          </div>
         </div>
       </div>
       <div className="flex items-center justify-end w-4/12 gap-3 mr-6">

@@ -1,17 +1,27 @@
+import Icon from "components/svg/Icon"
+
 export default function InputQty({ qty, updateQty }) {
   return (
-    <div>
+    <div className="group flex flex-col h-full items-center justify-center text-blanco gap-1">
+      <button
+        className="h-4 w-4 text-gs300 hidden group-focus-within:block group-hover:block"
+        onClick={() => updateQty(+qty + 1)}
+      >
+        <Icon svg="arrowTop" />
+      </button>
       <input
         type="number"
-        className="w-7 text-2xl font-bold m-0 bg-transparent border-b-4 border-violeta outline-none text-blanco1 text-center selection:text-blanco3 selection:bg-violeta"
+        className="h-8 w-8 text-center text-sl font-bold rounded-lg border-[1px] border-gs300 bg-[rgba(27,28,35,0.4)] group-hover:border-p500 focus:border-p500 outline-none"
         value={qty}
         onClick={(e) => e.target.select()}
-        onChange={(e) => {
-          if (e.target.value > 0 && e.target.value <= 99) {
-            updateQty(e.target.value)
-          }
-        }}
+        onChange={(e) => updateQty(e.target.value)}
       />
+      <button
+        className="h-4 w-4 text-gs300 hidden group-focus-within:block group-hover:block"
+        onClick={() => updateQty(+qty - 1)}
+      >
+        <Icon svg="arrowBottom" />
+      </button>
     </div>
   )
 }
