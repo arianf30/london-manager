@@ -1,7 +1,7 @@
 import CategoryListContainer from "./CategoryListContainer"
 import ItemListContainer from "./ItemListContainer"
 
-export default function BoardSaleProducts({
+export default function PanelSaleProducts({
   filter,
   updateFilter,
   layout,

@@ -29,8 +29,9 @@ const Articulos = async (req, res) => {
     ],
     where: {
       tipo_producto: {
-        [Op.or]: ["producto", "receta"],
+        [Op.or]: ["producto", "receta", "promocion"],
       },
+      activo: 1,
     },
   })
   return res.json(stock)

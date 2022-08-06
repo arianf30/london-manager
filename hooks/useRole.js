@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import plainText from "utils/plainText"
 import { userPermissions } from "services/pop/permissions"
-import { dehydrate, QueryClient, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 
 export default function useRole() {
@@ -11,8 +11,7 @@ export default function useRole() {
   let permissionsSection = null
   const { data, isLoading, isError, refetch } = useQuery(
     ["permissions", session.id, +pop],
-    () => userPermissions(pop),
-    { staleTime: Infinity, cacheTime: Infinity }
+    () => userPermissions(pop)
   )
 
   if (data) {
@@ -34,18 +33,5 @@ export default function useRole() {
     isError,
     isLoading,
     refetch,
-  }
-}
-
-export const getStaticProps = async (context) => {
-  const { pop } = context.params?.pop
-  const queryClient = new QueryClient()
-
-  await queryClient.prefetchQuery(["permissions"], () => userPermissions(pop))
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
   }
 }

@@ -9,12 +9,14 @@ import { closeFullscreen, openFullscreen } from "utils/fullScreen"
 export default function SectionNavbar({
   title,
   popInfo,
-  permissions,
+  permissionsSection,
   itemsDropdown,
   addButton,
 }) {
   const router = useRouter()
   const { pop } = router.query
+
+  console.log(permissionsSection)
 
   return (
     <header className="relative flex justify-between h-16 px-4 bg-gs700 items-center z-20 select-none">

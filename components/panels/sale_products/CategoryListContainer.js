@@ -1,10 +1,11 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { getCategories } from "services/pop/categorias"
 import ListCategoryButton from "components/buttons/ListCategoryButton"
 import BasicLoader from "components/svg/loaders/BasicLoader"
-import { useQuery } from "@tanstack/react-query"
 import Icon from "components/svg/Icon"
+import PromotionsButton from "components/buttons/PromotionsButton"
 
 export default function CategoryListContainer({
   filter,
@@ -35,7 +36,7 @@ export default function CategoryListContainer({
   }, [response])
 
   return (
-    <div className="w-[25%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto">
+    <div className="relative w-[25%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto">
       <div className="flex items-center justify-between h-14 px-3 border-b-[1px] border-[rgba(56,56,56,0.5)]">
         <p className="text-sl font-bold text-gs500">VISTA</p>
         <div className="">
@@ -61,7 +62,7 @@ export default function CategoryListContainer({
         </div>
       )}
       {categorys?.map((item, index) => {
-        if (item.tipo !== "insumo") {
+        if (item.tipo === "producto" || item.tipo === "receta") {
           return (
             <ListCategoryButton
               key={`categorias-${index}`}
@@ -72,6 +73,12 @@ export default function CategoryListContainer({
           )
         }
       })}
+      <div className="absolute bottom-16">
+        <PromotionsButton
+          state={filter === "Promociones" ? true : false}
+          action={() => updateFilter("Promociones")}
+        />
+      </div>
     </div>
   )
 }

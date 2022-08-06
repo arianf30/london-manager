@@ -7,7 +7,7 @@ export default function useUserCompleteInfo() {
   )
 
   return {
-    user: data?.data,
+    user: data?.data ?? [],
     isError,
     isLoading,
   }
