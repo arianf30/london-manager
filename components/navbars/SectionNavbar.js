@@ -4,7 +4,7 @@ import IconButtonCircle from "components/buttons/IconButtonCircle"
 import DropdownNavbar from "components/dropdowns/DropdownNavbar"
 import ImageZoom from "react-medium-image-zoom"
 import "react-medium-image-zoom/dist/styles.css"
-import { closeFullscreen, openFullscreen } from "utils/fullScreen"
+import { closeFullscreen, openFullscreen } from "utils/fullscreen"
 
 export default function SectionNavbar({
   title,
