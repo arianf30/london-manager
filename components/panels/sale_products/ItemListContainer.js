@@ -12,7 +12,7 @@ export default function ItemListContainer({ filter, layout, addItem }) {
   return (
     <div
       id="product-list-vender"
-      className="w-[75%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto"
+      className="w-[75%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto select-none"
     >
       <div className={layoutStyle}>
         {isLoading && <SkeletonProductList />}

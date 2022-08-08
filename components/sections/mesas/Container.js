@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { useRouter } from "next/router"
 import useRole from "hooks/useRole"
 import MesasContext from "context/mesas"
@@ -9,7 +9,11 @@ import SaleItemsContainer from "components/panels/sale_items_resume/SaleItemsCon
 import SaleResume from "components/panels/sale_items_resume/SaleResume"
 import PaymentSale from "components/modals/PaymentSale"
 import SectionNavbar from "components/navbars/SectionNavbar"
-import PanelTables from "./PanelTables"
+import PanelTables from "components/sections/mesas/PanelTables"
+import OpenTable from "components/sections/mesas/OpenTable"
+import { dbFirestore } from "db/firebase"
+import { onValue, ref } from "firebase/database"
+import CardEmptyTable from "components/svg/icons/CardEmptyTable"
 
 export default function Container() {
   const router = useRouter()
@@ -18,12 +22,43 @@ export default function Container() {
   const {
     config,
     updateConfig,
+    tables,
+    updateTables,
     discount,
     updateDiscount,
     saleItems,
+    updateSaleItems,
+    incrementItem,
+    decrementItem,
+    updateCommentItem,
+    removeItem,
     promotions,
     addItem,
   } = useContext(MesasContext)
+
+  useEffect(() => {
+    // ESCUCHAR MESAS
+    onValue(ref(dbFirestore, `pop/${pop}/mesas`), (snapshot) => {
+      const data = snapshot.val()
+      if (data !== null) {
+        updateTables(data)
+      }
+    })
+
+    // ESCUCHAR MESA ACTIVA
+    onValue(
+      ref(dbFirestore, `pop/${pop}/mesas/${config?.table}/saleItems`),
+      (snapshot) => {
+        const data = snapshot.val()
+        if (data !== null) {
+          let valuesTodo = Object.values(data)
+          updateSaleItems([...valuesTodo])
+        } else {
+          updateSaleItems([])
+        }
+      }
+    )
+  }, [])
 
   if (permissionsSection?.read === 2) {
     return (
@@ -62,48 +97,89 @@ export default function Container() {
               />
             ) : (
               <PanelTables
+                tables={tables}
                 lounge={config?.lounge}
                 updateLounge={(idLounge) => updateConfig("lounge", idLounge)}
                 table={config?.table}
                 updateTable={(table) => updateConfig("table", table)}
+                editMode={config?.editTablesMode}
+                updateEditMode={(val) => updateConfig("editTablesMode", val)}
               />
             )}
           </div>
 
           {/* SALE SECTION */}
           <div className="flex flex-wrap content-between w-[33.34%] h-full">
-            <SaleControllers
-              qty={config?.qty}
-              updateQty={(newQty) => updateConfig("qty", newQty)}
-              addItem={addItem}
-            />
-            <SaleItemsContainer
-              controllersHeight={262}
-              saleItems={saleItems}
-              viewDiscount={config?.viewDiscount}
-              viewSubtotal={config?.viewSubtotal}
-              ptomotions={promotions}
-            />
-            <SaleResume
-              saleItems={saleItems}
-              promotions={promotions}
-              viewSubtotal={config?.viewSubtotal}
-              updateViewSubtotal={(newViewSubtotal) =>
-                updateConfig("viewSubtotal", newViewSubtotal)
-              }
-              viewDiscount={config?.viewDiscount}
-              updateViewDiscount={(newViewDiscount) =>
-                updateConfig("viewDiscount", newViewDiscount)
-              }
-              discountType={discount?.discountType}
-              updateDiscountType={(newDiscountType) =>
-                updateDiscount("discountType", newDiscountType)
-              }
-              discountQty={discount?.discountQty}
-              updateDiscountQty={(newDiscountQty) =>
-                updateDiscount("discountQty", newDiscountQty)
-              }
-            />
+            {config?.table > 0 ? (
+              <>
+                {tables[config?.table]?.status !== "open" ? (
+                  <>
+                    <OpenTable table={config?.table} />
+                  </>
+                ) : (
+                  <>
+                    <SaleControllers
+                      table={config?.table}
+                      tables={tables}
+                      viewProducts={config?.viewProducts}
+                      updateViewProducts={(value) =>
+                        updateConfig("viewProducts", value)
+                      }
+                      qty={config?.qty}
+                      updateQty={(newQty) => updateConfig("qty", newQty)}
+                      addItem={addItem}
+                    />
+                    <SaleItemsContainer
+                      controllersHeight={339}
+                      saleItems={saleItems}
+                      incrementItem={incrementItem}
+                      decrementItem={decrementItem}
+                      updateCommentItem={updateCommentItem}
+                      removeItem={removeItem}
+                      viewDiscount={config?.viewDiscount}
+                      viewSubtotal={config?.viewSubtotal}
+                      ptomotions={promotions}
+                    />
+                    <SaleResume
+                      saleItems={saleItems}
+                      promotions={promotions}
+                      viewSubtotal={config?.viewSubtotal}
+                      updateViewSubtotal={(newViewSubtotal) =>
+                        updateConfig("viewSubtotal", newViewSubtotal)
+                      }
+                      viewDiscount={config?.viewDiscount}
+                      updateViewDiscount={(newViewDiscount) =>
+                        updateConfig("viewDiscount", newViewDiscount)
+                      }
+                      discountType={discount?.discountType}
+                      updateDiscountType={(newDiscountType) =>
+                        updateDiscount("discountType", newDiscountType)
+                      }
+                      discountQty={discount?.discountQty}
+                      updateDiscountQty={(newDiscountQty) =>
+                        updateDiscount("discountQty", newDiscountQty)
+                      }
+                      cashBoard
+                    />
+                  </>
+                )}
+              </>
+            ) : (
+              <div className="h-full">
+                <div className="flex items-center justify-between h-[54px] w-full border-l-[6px] border-gs500 bg-gs700 pl-[10px] pr-4">
+                  <h3 className="text-blanco font-bold">Indicar mesa</h3>
+                </div>
+                <div className="flex flex-col h-[calc(100%_-_54px)] w-full items-center justify-center px-14 py-8 overflow-auto">
+                  <div className="inline-block mb-8 h-[199px] min-h-[199px]">
+                    <CardEmptyTable />
+                  </div>
+                  <p className="text-bm text-gs400 text-center">
+                    Seleccioná un producto que quieras vender, escanealo o
+                    ingresalo en el buscador.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </>

@@ -1,0 +1,114 @@
+export default function CardEmptyTable({ width = 325, height = 199 }) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 325 199"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect x="0.5" y="0.5" width="324" height="198" rx="11.5" fill="white" />
+      <rect x="212.5" y="22.5" width="81" height="33" rx="3.5" fill="#FAFAFA" />
+      <rect
+        x="212.5"
+        y="22.5"
+        width="81"
+        height="33"
+        rx="3.5"
+        stroke="#E6E6E6"
+      />
+      <rect x="212.5" y="82.5" width="81" height="33" rx="3.5" fill="#FAFAFA" />
+      <rect
+        x="212.5"
+        y="82.5"
+        width="81"
+        height="33"
+        rx="3.5"
+        stroke="#E6E6E6"
+      />
+      <rect
+        x="212.5"
+        y="144.5"
+        width="81"
+        height="33"
+        rx="3.5"
+        fill="#FAFAFA"
+      />
+      <rect
+        x="212.5"
+        y="144.5"
+        width="81"
+        height="33"
+        rx="3.5"
+        stroke="#E6E6E6"
+      />
+      <rect x="127.5" y="21.5" width="57" height="25" rx="3.5" fill="#FAFAFA" />
+      <rect
+        x="127.5"
+        y="21.5"
+        width="57"
+        height="25"
+        rx="3.5"
+        stroke="#E6E6E6"
+      />
+      <rect x="34.5" y="21.5" width="57" height="25" rx="3.5" fill="#FAFAFA" />
+      <rect
+        x="34.5"
+        y="21.5"
+        width="57"
+        height="25"
+        rx="3.5"
+        stroke="#E6E6E6"
+      />
+      <rect x="17.5" y="78.5" width="99" height="99" rx="49.5" fill="#FAFAFA" />
+      <rect
+        x="17.5"
+        y="78.5"
+        width="99"
+        height="99"
+        rx="49.5"
+        stroke="#E6E6E6"
+      />
+      <rect
+        x="138.5"
+        y="78.5"
+        width="41"
+        height="41"
+        rx="20.5"
+        fill="#FAFAFA"
+      />
+      <rect
+        x="138.5"
+        y="78.5"
+        width="41"
+        height="41"
+        rx="20.5"
+        stroke="#E6E6E6"
+      />
+      <rect
+        x="138.5"
+        y="136.5"
+        width="41"
+        height="41"
+        rx="20.5"
+        fill="#FAFAFA"
+      />
+      <rect
+        x="138.5"
+        y="136.5"
+        width="41"
+        height="41"
+        rx="20.5"
+        stroke="#E6E6E6"
+      />
+      <rect
+        x="0.5"
+        y="0.5"
+        width="324"
+        height="198"
+        rx="11.5"
+        stroke="#E6E6E6"
+      />
+    </svg>
+  )
+}

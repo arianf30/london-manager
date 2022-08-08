@@ -11,6 +11,10 @@ function scrollToBottom(id) {
 export default function SaleItemsContainer({
   controllersHeight,
   saleItems,
+  incrementItem,
+  decrementItem,
+  updateCommentItem,
+  removeItem,
   viewDiscount,
   viewSubtotal,
   promotions,
@@ -38,7 +42,13 @@ export default function SaleItemsContainer({
         saleItems.map((item, index) => {
           return (
             <div key={`saleItem-${item.id}`}>
-              <SaleItem item={item} />
+              <SaleItem
+                item={item}
+                incrementItem={incrementItem}
+                decrementItem={decrementItem}
+                updateCommentItem={updateCommentItem}
+                removeItem={removeItem}
+              />
             </div>
           )
         })}

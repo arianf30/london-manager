@@ -8,11 +8,13 @@ export default function InputProductsSearchResults({ query, action }) {
 
   useEffect(() => {
     const newResults = new Array()
-    if (data && Array.isArray(data) && query.length >= 4) {
+    if (data && Array.isArray(data) && query.length >= 2) {
       data.forEach((item) => {
-        let textToSearch = `${item.marca} ${item.descripcion_1} ${item.descripcion_2} ${item.codigo_barras}`
-        if (textToSearch.toLowerCase().includes(query.toLowerCase()))
-          newResults.push(item)
+        if (newResults.length < 8) {
+          let textToSearch = `${item.marca} ${item.descripcion_1} ${item.descripcion_2} ${item.codigo_barras}`
+          if (textToSearch.toLowerCase().includes(query.toLowerCase()))
+            newResults.push(item)
+        }
       })
     }
     setResults(newResults)
@@ -28,7 +30,7 @@ export default function InputProductsSearchResults({ query, action }) {
               onClick={() => {
                 action(item)
               }}
-              className={`flex w-full h-8 items-center px-2 py-1 hover:bg-gs600 select-none rounded-[4px]`}
+              className={`flex w-full min-h-8 items-center px-2 py-1 hover:bg-gs600 select-none rounded-[4px]`}
             >
               {item.imagen_url ? (
                 <div
@@ -45,11 +47,14 @@ export default function InputProductsSearchResults({ query, action }) {
                   <Icon svg="image" />
                 </div>
               )}
-              <span className="">
-                {item.descripcion_1} {item.descripcion_2}
-                <br />
-                {item.codigo_barras}
-              </span>
+              <div className="text-left w-[calc(100%_-_32px)]">
+                <p className="truncate text-bm">
+                  {item.descripcion_1} {item.descripcion_2}
+                </p>
+                <p className="truncate text-cap text-gs300">
+                  {item.codigo_barras}
+                </p>
+              </div>
             </button>
           )
         })}

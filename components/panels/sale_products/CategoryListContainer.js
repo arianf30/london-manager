@@ -36,7 +36,7 @@ export default function CategoryListContainer({
   }, [response])
 
   return (
-    <div className="relative w-[25%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto">
+    <div className="relative w-[25%] h-full border-r-[1px] border-[rgba(56,56,56,0.5)] overflow-auto select-none">
       <div className="flex items-center justify-between h-14 px-3 border-b-[1px] border-[rgba(56,56,56,0.5)]">
         <p className="text-sl font-bold text-gs500">VISTA</p>
         <div className="">

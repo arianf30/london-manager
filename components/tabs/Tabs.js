@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 export default function Tabs({ options, active, action }) {
   return (
     <div className="relative flex h-full overflow-x-auto">
-      {options.map((item, i) => (
+      {options?.map((item, i) => (
         <div className="relative w-[144px]" key={`tab-${i}]`}>
           <TabsButton
             text={item.nombre}

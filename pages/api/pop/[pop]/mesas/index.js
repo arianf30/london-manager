@@ -1,5 +1,5 @@
-import popAuthorization from "middleware/popAuthorization"
-import withAuthentication from "middleware/withAuthentication"
+// import popAuthorization from "middleware/popAuthorization"
+// import withAuthentication from "middleware/withAuthentication"
 import MesaModel from "models/pop/mesas"
 
 const Mesas = async (req, res) => {
@@ -18,4 +18,5 @@ const Mesas = async (req, res) => {
   return res.json(mesas)
 }
 
-export default withAuthentication(popAuthorization(Mesas))
+// export default withAuthentication(popAuthorization(Mesas))
+export default Mesas

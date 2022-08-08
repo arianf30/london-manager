@@ -7,16 +7,16 @@ const calcTotal = (saleItems) => {
   if (saleItems && Array.isArray(saleItems)) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
-        item.tipo_precio,
-        item.precio_venta,
-        item.precio_compra
+        item?.tipo_precio,
+        item?.precio_venta,
+        item?.precio_compra
       )
       const discount = articleDiscountCalc(
         price,
-        item.descuento_cant,
-        item.descuento_tipo
+        item?.descuento_cant,
+        item?.descuento_tipo
       )
-      const priceQty = priceToShow(price, discount, item.qty)
+      const priceQty = priceToShow(price, discount, item?.qty)
       calcTotal += parseFloat(priceQty)
     })
   }
@@ -25,14 +25,14 @@ const calcTotal = (saleItems) => {
 
 export const calcSubtotal = (saleItems) => {
   let calcSubtotal = 0
-  if (saleItems && Array.isArray(saleItems)) {
+  if (saleItems.length > 0) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
-        item.tipo_precio,
-        item.precio_venta,
-        item.precio_compra
+        item?.tipo_precio,
+        item?.precio_venta,
+        item?.precio_compra
       )
-      const priceQty = priceToShow(price, 0, item.qty)
+      const priceQty = priceToShow(price, 0, item?.qty)
       calcSubtotal += parseFloat(priceQty)
     })
   }
@@ -42,19 +42,19 @@ export const calcSubtotal = (saleItems) => {
 
 export const calcDiscounts = (saleItems) => {
   let calcDiscounts = 0
-  if (saleItems && Array.isArray(saleItems)) {
+  if (saleItems.lenght > 0) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
-        item.tipo_precio,
-        item.precio_venta,
-        item.precio_compra
+        item?.tipo_precio,
+        item?.precio_venta,
+        item?.precio_compra
       )
       const discount = articleDiscountCalc(
         price,
-        item.descuento_cant,
-        item.descuento_tipo
+        item?.descuento_cant,
+        item?.descuento_tipo
       )
-      const priceQty = priceToShow(0, discount, item.qty)
+      const priceQty = priceToShow(0, discount, item?.qty)
       calcDiscounts += parseFloat(priceQty)
     })
   }

@@ -20,6 +20,10 @@ export default function Container() {
     discount,
     updateDiscount,
     saleItems,
+    incrementItem,
+    decrementItem,
+    updateCommentItem,
+    removeItem,
     promotions,
     addItem,
   } = useContext(VenderContext)
@@ -68,7 +72,12 @@ export default function Container() {
               addItem={addItem}
             />
             <SaleItemsContainer
+              controllersHeight={262}
               saleItems={saleItems}
+              incrementItem={incrementItem}
+              decrementItem={decrementItem}
+              updateCommentItem={updateCommentItem}
+              removeItem={removeItem}
               viewDiscount={config?.viewDiscount}
               viewSubtotal={config?.viewSubtotal}
               ptomotions={promotions}

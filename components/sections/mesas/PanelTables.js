@@ -1,9 +1,12 @@
-import { useRef } from "react"
+import { useRouter } from "next/router"
+import { useEffect, useRef } from "react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import SecondaryButton from "components/buttons/SecondaryButton"
 import Tabs from "components/tabs/Tabs"
 import useQuerySalones from "hooks/querys/mesas/useQuerySalones"
 import useQueryMesas from "hooks/querys/mesas/useQueryMesas"
 import { motion } from "framer-motion"
+import { postMesa } from "services/pop/mesas"
 
 const LAYOUTS = {
   "1s": "h-10 w-10 rounded-[3px]",
@@ -24,20 +27,50 @@ const LAYOUTS = {
 }
 
 const STATE = {
-  abierta: "bg-s600 border-s700",
-  cerrada: "bg-e500 border-e600",
+  close: "bg-s600 border-s700",
+  open: "bg-e500 border-e600",
 }
 
 export default function PanelTables({
+  tables,
   lounge,
   updateLounge,
   table,
   updateTable,
+  editMode,
+  updateEditMode,
 }) {
+  const { pop } = useRouter().query
+  const queryClient = useQueryClient()
+
   const { data: salones, isLoading: isLoadingSalones } = useQuerySalones()
   const { data: mesas, isLoading: isLoadingMesas } = useQueryMesas()
+  const { mutate: mutateMesa } = useMutation(postMesa)
 
   const constraintsRef = useRef(null)
+
+  const saveTablePosition = (tableId) => {
+    const pos = document
+      .getElementById(`table-move-${tableId}`)
+      .style.transform.split(" ")
+    const x = pos[0].slice(11, -3)
+    const y = pos[1].slice(11, -3)
+
+    mutateMesa({
+      pop: pop,
+      id: tableId,
+      payload: {
+        "data-x": parseFloat(x),
+        "data-y": parseFloat(y),
+      },
+    })
+  }
+
+  useEffect(() => {
+    if (!editMode) {
+      queryClient.invalidateQueries(["mesas", pop])
+    }
+  }, [editMode])
 
   return (
     <div className="flex flex-col w-full h-full overflow-auto">
@@ -48,19 +81,22 @@ export default function PanelTables({
           active={lounge}
           action={(lounge) => updateLounge(lounge)}
         />
-        <div className="min-w-max pl-4">
+        <div
+          className={`relative min-w-max pl-4 ${editMode && "animate-pulse"}`}
+        >
           <SecondaryButton
-            text="Mover mesas"
+            text={editMode ? "Dejar de mover" : "Mover mesas"}
             size="sm"
             theme="light"
             icon="move"
+            action={() => updateEditMode(!editMode)}
           />
         </div>
       </div>
       {/* TABLE */}
-      <div className="relative w-full h-[calc(100%_-_54px)] py-6 px-4">
+      <div className="w-full h-[calc(100%_-_54px)] py-6 px-4 select-none">
         <motion.div
-          className="h-full w-full rounded-xl bg-gs550"
+          className="relative h-full w-full rounded-xl bg-gs550 overflow-hidden"
           ref={constraintsRef}
         >
           {mesas?.map((mesa, index) => {
@@ -68,23 +104,35 @@ export default function PanelTables({
               return (
                 <motion.div
                   key={`mesa-${index}`}
-                  className={`absolute flex items-center justify-center ${
+                  id={`table-move-${mesa.id}`}
+                  className={`inline-flex items-center justify-center ${
                     LAYOUTS[mesa.size]
                   } ${
-                    STATE[mesa.estado]
-                  } border-[3px] text-ss font-bold text-blanco`}
-                  style={{
-                    left: `${mesa["data-x"]}px`,
-                    top: `${mesa["data-y"]}px`,
-                  }}
-                  drag
+                    STATE[tables[mesa.id]?.status ?? "close"]
+                  } border-[3px] text-ss font-bold text-blanco ${
+                    table === mesa.id && "border-a400"
+                  } ${editMode && "cursor-move"}`}
                   dragConstraints={constraintsRef}
+                  drag={editMode ? true : false}
                   dragMomentum={false}
                   dragElastic={0}
-                  whileDrag={{ scale: 1.2 }}
-                  onDragEnd={(event, info) =>
-                    console.log(info.point.x, info.point.y)
-                  }
+                  onDragEnd={() => {
+                    saveTablePosition(mesa.id)
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{
+                    opacity: 1,
+                    x: parseFloat(mesa["data-x"]),
+                    y: parseFloat(mesa["data-y"]),
+                  }}
+                  transition={{
+                    duration: 0,
+                  }}
+                  onClick={() => {
+                    if (!editMode) {
+                      updateTable(mesa.id)
+                    }
+                  }}
                 >
                   {mesa.id}
                 </motion.div>

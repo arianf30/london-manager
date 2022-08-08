@@ -17,6 +17,7 @@ export default function PrimaryButton({
   action,
   icon,
   disabled = false,
+  classes,
 }) {
   let addStyles =
     "hover:bg-[linear-gradient(92.28deg,#5E5EA7_0%,#1C9C7D_103.32%)]"
@@ -24,18 +25,16 @@ export default function PrimaryButton({
     <button
       className={`flex items-center justify-center text-blanco bg-p500 rounded-[4px] ${
         SIZES[size]
-      } ${THEMES[theme]} ${!disabled && addStyles}`}
+      } ${THEMES[theme]} ${!disabled && addStyles} ${classes}`}
       disabled={disabled}
       onClick={action}
     >
       {icon && (
-        <svg
-          className="h-[38%] mr-[5px]"
-          viewBox={svgs[icon].viewBox}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          {svgs[icon].svg}
-        </svg>
+        <div className="h-3 w-3 mr-[5px]">
+          <svg viewBox={svgs[icon].viewBox} xmlns="http://www.w3.org/2000/svg">
+            {svgs[icon].svg}
+          </svg>
+        </div>
       )}
       {text}
     </button>

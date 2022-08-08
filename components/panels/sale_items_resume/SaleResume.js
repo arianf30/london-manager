@@ -1,4 +1,6 @@
+import IconRectangleButton from "components/buttons/IconRectangleButton"
 import Icon from "components/svg/Icon"
+import { useRouter } from "next/router"
 import formatPriceNumber from "utils/formatPriceNumber"
 import calcTotal, {
   calcDiscounts,
@@ -16,7 +18,10 @@ export default function SaleResume({
   updateDiscountType,
   discountQty,
   updateDiscountQty,
+  cashBoard,
 }) {
+  const router = useRouter()
+  const { pop, section } = router.query
   const subtotal = calcSubtotal(saleItems)
   const discountProducts = calcDiscounts(saleItems)
   const discountGeneral = () => {
@@ -125,12 +130,25 @@ export default function SaleResume({
       )}
 
       {/* TOTAL */}
-      <div className="flex items-center justify-start w-full h-[90px] bg-gs600 px-4">
-        <p className="text-sl text-gs300 text-bold mr-[19px]">TOTAL</p>
-        <div className="flex align-top">
-          <h1 className="text-h0 text-s400 font-bold">{totalSep[0]}</h1>
-          <p className="text-sl text-s400 font-bold ml-1">{totalSep[1]}</p>
+      <div className="flex items-center justify-between w-full h-[90px] bg-gs600 px-4">
+        <div className="flex items-center justify-start">
+          <p className="text-sl text-gs300 font-bold mr-[19px]">TOTAL</p>
+          <div className="flex align-top">
+            <h1 className="text-h0 text-s400 font-bold">
+              {total > 0 ? totalSep[0] : "$ 000"}
+            </h1>
+            <p className="text-sl text-s400 font-bold ml-1">{totalSep[1]}</p>
+          </div>
         </div>
+        {cashBoard && (
+          <IconRectangleButton
+            size="xl"
+            icon="caja"
+            classes="bg-s400"
+            classesBox="p-[10%]"
+            action={() => router.push(`/pop/${pop}/${section}?modal=cobrar`)}
+          />
+        )}
       </div>
     </div>
   )

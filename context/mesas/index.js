@@ -1,3 +1,5 @@
+import { dbFirestore } from "db/firebase"
+import { ref, set, update } from "firebase/database"
 import { useRouter } from "next/router"
 import { createContext, useEffect, useReducer } from "react"
 
@@ -6,6 +8,7 @@ const MesasContext = createContext({})
 const ACTIONS = {
   INITIALIZE: "initialize",
   UPDATE_CONFIG: "update_config",
+  UPDATE_TABLES: "update_tables",
   UPDATE_DISCOUNT: "update_discount",
   UPDATE_CLIENT: "update_client",
   UPDATE_INVOICE: "update_invoice",
@@ -23,13 +26,9 @@ const ACTIONS_REDUCERS = {
     ...state,
     config: { ...action.payload },
   }),
-  [ACTIONS.UPDATE_DISCOUNT]: (state, action) => ({
+  [ACTIONS.UPDATE_TABLES]: (state, action) => ({
     ...state,
-    discount: { ...action.payload },
-  }),
-  [ACTIONS.UPDATE_CLIENT]: (state, action) => ({
-    ...state,
-    client: { ...action.payload },
+    tables: action.payload,
   }),
   [ACTIONS.UPDATE_INVOICE]: (state, action) => ({
     ...state,
@@ -67,21 +66,14 @@ export function Provider({ children }) {
       qty: 1,
       lounge: 0,
       table: 0,
+      editTablesMode: false,
       viewProducts: false,
       viewSubtotal: false,
       viewDiscount: false,
       viewKeyboard: false,
       print: true,
     },
-    discount: {
-      discountId: 0,
-      discountType: "percent",
-      discountQty: 0,
-    },
-    client: {
-      id: 0,
-      name: "",
-    },
+    tables: [],
     invoice: {
       active: true,
       cod: 0,
@@ -143,23 +135,10 @@ export function Provider({ children }) {
     })
   }
 
-  const updateDiscount = (prop, value) => {
+  const updateTables = (todo) => {
     dispatch({
-      type: ACTIONS.UPDATE_DISCOUNT,
-      payload: {
-        ...state.discount,
-        [prop]: value,
-      },
-    })
-  }
-
-  const updateClient = (prop, value) => {
-    dispatch({
-      type: ACTIONS.UPDATE_CLIENT,
-      payload: {
-        ...state.client,
-        [prop]: value,
-      },
+      type: ACTIONS.UPDATE_TABLES,
+      payload: todo,
     })
   }
 
@@ -193,6 +172,13 @@ export function Provider({ children }) {
     })
   }
 
+  const updateSaleItems = (todo) => {
+    dispatch({
+      type: ACTIONS.UPDATE_SALE_ITEMS,
+      payload: todo,
+    })
+  }
+
   // ITEMS-FUNCTIONS
   const existItem = (id) => {
     if (state.saleItems) {
@@ -213,80 +199,79 @@ export function Provider({ children }) {
   }
 
   const newItem = (item) => {
-    state.saleItems
-      ? dispatch({
-          type: ACTIONS.UPDATE_SALE_ITEMS,
-          payload: [...state.saleItems, { ...item, qty: state.config.qty }],
-        })
-      : dispatch({
-          type: ACTIONS.UPDATE_SALE_ITEMS,
-          payload: [{ ...item, qty: state.config.qty }],
-        })
+    let oldKey = state.saleItems.length
+    let newItemKey = 0
+    if (oldKey > 0) {
+      newItemKey = oldKey
+    }
+    set(
+      ref(
+        dbFirestore,
+        `pop/${pop}/mesas/${state.config.table}/saleItems/${newItemKey}`
+      ),
+      { ...item, qty: state.config.qty }
+    )
   }
 
   const incrementItem = (itemId, qty = 1) => {
-    dispatch({
-      type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.saleItems.map((item) => {
-        if (itemId === item.id) {
-          const newQty = parseFloat(item.qty) + parseFloat(qty)
-          if (newQty < 999) {
-            return {
-              ...item,
-              qty: newQty,
-            }
-          }
-        }
-        return item
-      }),
-    })
+    const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
+    console.log(foundIndex)
+    if (foundIndex > -1) {
+      const newQty =
+        parseFloat(state.saleItems[foundIndex].qty) + parseFloat(qty)
+      if (newQty < 999) {
+        update(
+          ref(
+            dbFirestore,
+            `pop/${pop}/mesas/${state.config.table}/saleItems/${foundIndex}`
+          ),
+          { qty: newQty }
+        )
+      }
+    }
   }
 
   const decrementItem = (itemId, qty = 1) => {
-    dispatch({
-      type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.saleItems.map((item) => {
-        if (itemId === item.id) {
-          const newQty = parseFloat(item.qty) - parseFloat(qty)
-          if (newQty >= 1) {
-            return {
-              ...item,
-              qty: newQty,
-            }
-          }
-        }
-        return item
-      }),
-    })
+    const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
+    console.log(foundIndex)
+    if (foundIndex > -1) {
+      const newQty =
+        parseFloat(state.saleItems[foundIndex].qty) - parseFloat(qty)
+      if (newQty > 1) {
+        update(
+          ref(
+            dbFirestore,
+            `pop/${pop}/mesas/${state.config.table}/saleItems/${foundIndex}`
+          ),
+          { qty: newQty }
+        )
+      }
+    }
   }
 
   const updateCommentItem = (itemId, comment = "") => {
-    dispatch({
-      type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.saleItems.map((item) => {
-        if (itemId === item.id) {
-          return {
-            ...item,
-            comment: comment,
-          }
-        }
-        return item
-      }),
-    })
+    const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
+    console.log(foundIndex)
+    if (foundIndex > -1) {
+      update(
+        ref(
+          dbFirestore,
+          `pop/${pop}/mesas/${state.config.table}/saleItems/${foundIndex}`
+        ),
+        { comment: comment }
+      )
+    }
   }
 
   const removeItem = (id) => {
-    dispatch({
-      type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: state.saleItems.filter((item) => item.id !== id),
+    const newSaleItems = state.saleItems.filter((item) => item.id !== id)
+    set(ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}/saleItems`), {
+      ...newSaleItems,
     })
   }
 
   const clearAllItems = () => {
-    dispatch({
-      type: ACTIONS.UPDATE_SALE_ITEMS,
-      payload: [],
-    })
+    delete ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}/saleItems`)
   }
 
   return (
@@ -294,10 +279,8 @@ export function Provider({ children }) {
       value={{
         config: state.config,
         updateConfig,
-        discount: state.discount,
-        updateDiscount,
-        client: state.client,
-        updateClient,
+        tables: state.tables,
+        updateTables,
         invoice: state.invoice,
         updateInvoice,
         payMethod: state.payMethod,
@@ -305,6 +288,7 @@ export function Provider({ children }) {
         payMethodSecondary: state.payMethodSecondary,
         updatePayMethodSecondary,
         saleItems: state.saleItems,
+        updateSaleItems,
         addItem,
         incrementItem,
         decrementItem,

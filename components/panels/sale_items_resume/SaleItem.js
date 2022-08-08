@@ -1,19 +1,22 @@
-import { useContext, useState } from "react"
-import VenderContext from "context/vender"
+import { useState } from "react"
 import salePriceCalc from "utils/prices/salePriceCalc"
 import articleDiscountCalc from "utils/prices/articleDiscountCalc"
 import priceToShow from "utils/prices/priceToShow"
 import Icon from "components/svg/Icon"
 import formatPriceNumber from "utils/formatPriceNumber"
 
-export default function SaleItem({ item }) {
+export default function SaleItem({
+  item,
+  incrementItem,
+  decrementItem,
+  updateCommentItem,
+  removeItem,
+}) {
   const [state, setState] = useState({
     menu: false,
     comment: false,
     discount: false,
   })
-  const { incrementItem, decrementItem, updateCommentItem, removeItem } =
-    useContext(VenderContext)
   const price = salePriceCalc(
     item.tipo_precio,
     item.precio_venta,
