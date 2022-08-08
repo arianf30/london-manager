@@ -44,7 +44,9 @@ export default function Container() {
         updateTables(data)
       }
     })
+  }, [])
 
+  useEffect(() => {
     // ESCUCHAR MESA ACTIVA
     onValue(
       ref(dbFirestore, `pop/${pop}/mesas/${config?.table}/saleItems`),
@@ -58,7 +60,7 @@ export default function Container() {
         }
       }
     )
-  }, [])
+  }, [config?.table])
 
   if (permissionsSection?.read === 2) {
     return (
