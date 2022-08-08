@@ -142,6 +142,12 @@ export function Provider({ children }) {
     })
   }
 
+  const updateDiscount = (col, value) => {
+    update(ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}`), {
+      [col]: value,
+    })
+  }
+
   const updateInvoice = (prop, value) => {
     dispatch({
       type: ACTIONS.UPDATE_INVOICE,
@@ -215,7 +221,6 @@ export function Provider({ children }) {
 
   const incrementItem = (itemId, qty = 1) => {
     const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
-    console.log(foundIndex)
     if (foundIndex > -1) {
       const newQty =
         parseFloat(state.saleItems[foundIndex].qty) + parseFloat(qty)
@@ -233,7 +238,6 @@ export function Provider({ children }) {
 
   const decrementItem = (itemId, qty = 1) => {
     const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
-    console.log(foundIndex)
     if (foundIndex > -1) {
       const newQty =
         parseFloat(state.saleItems[foundIndex].qty) - parseFloat(qty)
@@ -251,7 +255,6 @@ export function Provider({ children }) {
 
   const updateCommentItem = (itemId, comment = "") => {
     const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
-    console.log(foundIndex)
     if (foundIndex > -1) {
       update(
         ref(
@@ -281,6 +284,7 @@ export function Provider({ children }) {
         updateConfig,
         tables: state.tables,
         updateTables,
+        updateDiscount,
         invoice: state.invoice,
         updateInvoice,
         payMethod: state.payMethod,

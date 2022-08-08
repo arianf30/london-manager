@@ -100,7 +100,6 @@ export default function CarouselMenu({
             <div className="w-[600px] md:w-auto">
               <div className="grid grid-cols-4 md:grid-cols-3 gap-x-16 md:gap-x-8 sm:gap-x-0 place-content-center">
                 {sectionsConfiguration.map((item, index) => {
-                  console.log(item)
                   if (item != null && item.read > 0) {
                     if (item.section.nombre === "Jerarquías") return
                     let disabled = true

@@ -1,6 +1,7 @@
 import IconRectangleButton from "components/buttons/IconRectangleButton"
 import Icon from "components/svg/Icon"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
 import formatPriceNumber from "utils/formatPriceNumber"
 import calcTotal, {
   calcDiscounts,
@@ -14,6 +15,8 @@ export default function SaleResume({
   updateViewSubtotal,
   viewDiscount,
   updateViewDiscount,
+  discountName,
+  updateDiscountName,
   discountType,
   updateDiscountType,
   discountQty,
@@ -25,19 +28,29 @@ export default function SaleResume({
   const subtotal = calcSubtotal(saleItems)
   const discountProducts = calcDiscounts(saleItems)
   const discountGeneral = () => {
-    if (discountType === "pesos") return discountQty
+    if (discountType === "pesos") return formatPriceNumber(discountQty)
     if (discountType === "percent") {
-      let totalForDiscount = parseFloat(subtotal) + parseFloat(discountProducts)
-      return formatPriceNumber(
-        (totalForDiscount * parseFloat(discountQty)) / 100
-      )
+      if (discountQty > 0) {
+        let totalForDiscount =
+          parseFloat(subtotal) + parseFloat(discountProducts)
+        return formatPriceNumber(
+          (totalForDiscount * parseFloat(discountQty)) / 100
+        )
+      }
     }
-    return 0
+    return "$ 0,00"
   }
-  const total = calcTotal(saleItems)
+  const total = calcTotal(saleItems, discountType, discountQty)
 
   const totalString = formatPriceNumber(total).toString()
   const totalSep = totalString.split(",")
+
+  useEffect(() => {
+    const totalWithinDiscount = calcTotal(saleItems, "percent", 0)
+    if (parseFloat(discountQty) > totalWithinDiscount) {
+      updateDiscountQty(totalWithinDiscount)
+    }
+  }, [discountQty, total])
 
   return (
     <div className="w-full h-auto bg-gs550 box-border">
@@ -97,7 +110,11 @@ export default function SaleResume({
       {viewDiscount && (
         <div className="flex items-center justify-between w-full h-[38px] text-blanco pl-3 pr-4 border-b-[1px] border-gs500">
           <div className="h-full border-r-[1px] border-gs500 pr-3">
-            <select className="h-full text-bs bg-transparent pr-3 outline-none">
+            <select
+              className="h-full text-bs bg-transparent pr-3 outline-none"
+              onChange={(e) => updateDiscountName(e.target.value)}
+              value={discountName}
+            >
               <option className="p-0">Descuento general</option>
             </select>
           </div>
@@ -105,25 +122,17 @@ export default function SaleResume({
             <select
               className="h-full text-bs bg-transparent pr-3 outline-none"
               onChange={(e) => updateDiscountType(e.target.value)}
+              value={discountType}
             >
-              <option
-                value="percent"
-                selected={discountType === "percent" && "selected"}
-              >
-                % Porcentaje
-              </option>
-              <option
-                value="pesos"
-                selected={discountType === "pesos" && "selected"}
-              >
-                $ Pesos
-              </option>
+              <option value="percent">% Porcentaje</option>
+              <option value="pesos">$ Pesos</option>
             </select>
           </div>
           <input
             type="text"
             onChange={(e) => updateDiscountQty(e.target.value)}
-            value={discountQty}
+            value={discountQty ?? 0}
+            placeholder="0.00"
             className="w-full h-full bg-transparent text-bs outline-none pl-3 text-right text-gs400"
           />
         </div>

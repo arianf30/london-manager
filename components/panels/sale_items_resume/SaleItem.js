@@ -27,6 +27,7 @@ export default function SaleItem({
     item.descuento_cant,
     item.descuento_tipo
   )
+  const priceItem = priceToShow(price, 0, item.qty)
   const priceQty = priceToShow(price, discount, item.qty)
 
   return (
@@ -63,7 +64,7 @@ export default function SaleItem({
         {/* PRECIO */}
         <div className="flex items-center justify-end px-2 w-[calc(34%_-_32px)] overflow-hidden">
           <div>
-            <p className="text-bm font-bold truncate">{priceQty}</p>
+            <p className="text-bm font-bold truncate">{priceItem}</p>
             {item.descuento_cant > 0 && (
               <p className="text-s500 text-cap font-medium text-right">
                 {item.descuento_tipo === "porcentaje"

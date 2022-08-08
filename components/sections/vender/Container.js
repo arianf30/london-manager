@@ -93,14 +93,21 @@ export default function Container() {
               updateViewDiscount={(newViewDiscount) =>
                 updateConfig("viewDiscount", newViewDiscount)
               }
+              discountName="Descuento general"
+              updateDiscountName={() => console.log()}
               discountType={discount?.discountType}
-              updateDiscountType={(newDiscountType) =>
+              updateDiscountType={(newDiscountType) => {
+                updateDiscount("discountQty", 0)
                 updateDiscount("discountType", newDiscountType)
-              }
+              }}
               discountQty={discount?.discountQty}
-              updateDiscountQty={(newDiscountQty) =>
-                updateDiscount("discountQty", newDiscountQty)
-              }
+              updateDiscountQty={(newDiscountQty) => {
+                let newDis = discount?.discountQty
+                if (!isNaN(newDiscountQty)) newDis = newDiscountQty
+                if (discount?.discountType === "percent" && newDis > 100) return
+                if (newDis.length > 11) return
+                updateDiscount("discountQty", newDis)
+              }}
             />
           </div>
         </div>

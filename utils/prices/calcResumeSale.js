@@ -2,7 +2,7 @@ import articleDiscountCalc from "./articleDiscountCalc"
 import priceToShow from "./priceToShow"
 import salePriceCalc from "./salePriceCalc"
 
-const calcTotal = (saleItems) => {
+const calcTotal = (saleItems, discountType, discountQty) => {
   let calcTotal = 0
   if (saleItems && Array.isArray(saleItems)) {
     saleItems.forEach((item) => {
@@ -19,6 +19,15 @@ const calcTotal = (saleItems) => {
       const priceQty = priceToShow(price, discount, item?.qty)
       calcTotal += parseFloat(priceQty)
     })
+  }
+  if (discountQty) {
+    if (discountType === "pesos") {
+      calcTotal = calcTotal - parseFloat(discountQty)
+    }
+    if (discountType === "percent") {
+      const discTot = (calcTotal * parseFloat(discountQty)) / 100
+      calcTotal = calcTotal - discTot
+    }
   }
   return parseFloat(calcTotal).toFixed(2)
 }
@@ -42,7 +51,7 @@ export const calcSubtotal = (saleItems) => {
 
 export const calcDiscounts = (saleItems) => {
   let calcDiscounts = 0
-  if (saleItems.lenght > 0) {
+  if (saleItems.length > 0) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
         item?.tipo_precio,

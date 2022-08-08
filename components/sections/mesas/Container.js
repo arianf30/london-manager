@@ -12,7 +12,7 @@ import SectionNavbar from "components/navbars/SectionNavbar"
 import PanelTables from "components/sections/mesas/PanelTables"
 import OpenTable from "components/sections/mesas/OpenTable"
 import { dbFirestore } from "db/firebase"
-import { onValue, ref } from "firebase/database"
+import { off, onValue, ref } from "firebase/database"
 import CardEmptyTable from "components/svg/icons/CardEmptyTable"
 
 export default function Container() {
@@ -24,7 +24,6 @@ export default function Container() {
     updateConfig,
     tables,
     updateTables,
-    discount,
     updateDiscount,
     saleItems,
     updateSaleItems,
@@ -44,6 +43,7 @@ export default function Container() {
         updateTables(data)
       }
     })
+    return () => off(ref(dbFirestore, `pop/${pop}/mesas`))
   }, [])
 
   useEffect(() => {
@@ -60,6 +60,8 @@ export default function Container() {
         }
       }
     )
+    return () =>
+      off(ref(dbFirestore, `pop/${pop}/mesas/${config?.table}/saleItems`))
   }, [config?.table])
 
   if (permissionsSection?.read === 2) {
@@ -111,7 +113,7 @@ export default function Container() {
           </div>
 
           {/* SALE SECTION */}
-          <div className="flex flex-wrap content-between w-[33.34%] h-full">
+          <div className="flex flex-wrap content-between w-[33.34%] h-full border-l-[1px] border-gs550">
             {config?.table > 0 ? (
               <>
                 {tables[config?.table]?.status !== "open" ? (
@@ -153,14 +155,25 @@ export default function Container() {
                       updateViewDiscount={(newViewDiscount) =>
                         updateConfig("viewDiscount", newViewDiscount)
                       }
-                      discountType={discount?.discountType}
-                      updateDiscountType={(newDiscountType) =>
+                      discountName="Descuento general"
+                      updateDiscountName={() => console.log()}
+                      discountType={tables[config?.table]?.discountType}
+                      updateDiscountType={(newDiscountType) => {
+                        updateDiscount("discountQty", 0)
                         updateDiscount("discountType", newDiscountType)
-                      }
-                      discountQty={discount?.discountQty}
-                      updateDiscountQty={(newDiscountQty) =>
-                        updateDiscount("discountQty", newDiscountQty)
-                      }
+                      }}
+                      discountQty={tables[config?.table]?.discountQty}
+                      updateDiscountQty={(newDiscountQty) => {
+                        let newDis = tables[config?.table]?.discountQty
+                        if (!isNaN(newDiscountQty)) newDis = newDiscountQty
+                        if (
+                          tables[config?.table]?.discountType === "percent" &&
+                          newDis > 100
+                        )
+                          return
+                        if (newDis.length > 11) return
+                        updateDiscount("discountQty", newDis)
+                      }}
                       cashBoard
                     />
                   </>
