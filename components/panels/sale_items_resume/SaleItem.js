@@ -11,6 +11,7 @@ export default function SaleItem({
   decrementItem,
   updateCommentItem,
   removeItem,
+  qtyInPromo,
 }) {
   const [state, setState] = useState({
     menu: false,
@@ -46,16 +47,16 @@ export default function SaleItem({
           </div>
 
           {/* INFO RELACIONADA AL ITEM */}
-          <div className="flex items-center justify-end w-10 h-[21px]">
-            {item.promo && (
-              <div>
-                <Icon svg="fire" classes="h-[21px]" />
-                <div>1</div>
-              </div>
-            )}
+          <div className="flex items-center justify-end w-auto gap-[6px]">
             {item.comment && (
               <div>
                 <Icon svg="message" classes="h-[21px] text-p500" />
+              </div>
+            )}
+            {qtyInPromo && (
+              <div className="flex items-center">
+                <Icon svg="fire" classes="h-[22px] text-e500" />
+                <div className="text-cap text-negro">{qtyInPromo}</div>
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { calcDiscounts } from "utils/prices/calcResumeSale"
+import { calcDiscountProducts } from "utils/prices/calcResumeSale"
 import SaleItem from "components/panels/sale_items_resume/SaleItem"
 import CardProduct from "components/svg/icons/CardProduct"
 
@@ -18,8 +18,9 @@ export default function SaleItemsContainer({
   viewDiscount,
   viewSubtotal,
   promotions,
+  itemsInPromo,
 }) {
-  const discountCant = calcDiscounts(saleItems)
+  const discountCant = calcDiscountProducts(saleItems)
   let restSize = +controllersHeight
   if (viewDiscount) restSize += 38
   if (viewSubtotal) {
@@ -48,6 +49,9 @@ export default function SaleItemsContainer({
                 decrementItem={decrementItem}
                 updateCommentItem={updateCommentItem}
                 removeItem={removeItem}
+                qtyInPromo={
+                  itemsInPromo instanceof Map ? itemsInPromo.get(item.id) : null
+                }
               />
             </div>
           )

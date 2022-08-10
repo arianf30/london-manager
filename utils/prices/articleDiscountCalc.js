@@ -1,12 +1,11 @@
 export default function articleDiscountCalc(price, discount, discountType) {
+  let discountCalc = 0
   if (discount > 0) {
-    if (discountType === "porcentaje") {
-      const discountCalc = (price * parseFloat(discount)) / 100
-      return parseFloat(discountCalc).toFixed(2)
-    } else if (discountType === "pesos") {
-      const discountCalc = parseFloat(discount)
-      return parseFloat(discountCalc).toFixed(2)
+    if (discountType === "porcentaje" || discountType === "percent") {
+      discountCalc = (price * parseFloat(discount)) / 100
+    } else {
+      discountCalc = parseFloat(discount)
     }
   }
-  return 0
+  return parseFloat(-discountCalc).toFixed(2)
 }

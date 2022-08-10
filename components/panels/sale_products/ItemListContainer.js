@@ -2,6 +2,8 @@ import ItemButtonGrid from "components/panels/sale_products/ItemButtonGrid"
 import SkeletonProductList from "components/panels/sale_products/skeleton/SkeletonProductList"
 import ItemButtonList from "./ItemButtonList"
 import useQueryArticlesToSale from "hooks/querys/articles/useQueryArticlesToSale"
+import ItemButtonGridPromo from "./ItemButtonGridPromo"
+import ItemButtonListPromo from "./ItemButtonListPromo"
 
 export default function ItemListContainer({ filter, layout, addItem }) {
   const { data: response, isLoading, isError } = useQueryArticlesToSale()
@@ -18,7 +20,11 @@ export default function ItemListContainer({ filter, layout, addItem }) {
         {isLoading && <SkeletonProductList />}
         {response &&
           response?.map((item, index) => {
-            if (item.categoria === filter && item.tipo_producto !== "insumo") {
+            if (
+              item.categoria === filter &&
+              item.tipo_producto !== "insumo" &&
+              item.tipo_producto !== "promocion"
+            ) {
               return (
                 <div className="" key={index}>
                   {layout === "grid" && (
@@ -26,6 +32,27 @@ export default function ItemListContainer({ filter, layout, addItem }) {
                   )}
                   {layout === "list" && (
                     <ItemButtonList item={item} action={() => addItem(item)} />
+                  )}
+                </div>
+              )
+            }
+            if (
+              filter === "Promociones" &&
+              item.tipo_producto === "promocion"
+            ) {
+              return (
+                <div className="" key={index}>
+                  {layout === "grid" && (
+                    <ItemButtonGridPromo
+                      item={item}
+                      action={() => addItem(item)}
+                    />
+                  )}
+                  {layout === "list" && (
+                    <ItemButtonListPromo
+                      item={item}
+                      action={() => addItem(item)}
+                    />
                   )}
                 </div>
               )

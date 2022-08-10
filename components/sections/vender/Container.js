@@ -7,7 +7,7 @@ import PanelSaleProducts from "components/panels/sale_products/PanelSaleProducts
 import SaleControllers from "components/sections/vender/SaleControllers"
 import SaleItemsContainer from "components/panels/sale_items_resume/SaleItemsContainer"
 import SaleResume from "components/panels/sale_items_resume/SaleResume"
-import PaymentSale from "components/modals/PaymentSale"
+import PaymentSale from "components/modals/PaymentSale/PaymentSale"
 import SectionNavbar from "components/navbars/SectionNavbar"
 
 export default function Container() {
@@ -25,6 +25,7 @@ export default function Container() {
     updateCommentItem,
     removeItem,
     promotions,
+    itemsInPromo,
     addItem,
   } = useContext(VenderContext)
 
@@ -80,9 +81,11 @@ export default function Container() {
               removeItem={removeItem}
               viewDiscount={config?.viewDiscount}
               viewSubtotal={config?.viewSubtotal}
-              ptomotions={promotions}
+              promotions={promotions}
+              itemsInPromo={itemsInPromo}
             />
             <SaleResume
+              maxHeight={96}
               saleItems={saleItems}
               promotions={promotions}
               viewSubtotal={config?.viewSubtotal}

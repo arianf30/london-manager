@@ -6,8 +6,14 @@ const SIZES = {
 }
 
 const THEMES = {
-  light: "disabled:text-gs400 disabled:border-gs400",
-  dark: "disabled:text-gs500 disabled:border-gs500",
+  light: "text-p500 border-p500 disabled:text-gs400 disabled:border-gs400",
+  dark: "text-blanco border-blanco disabled:text-gs500 disabled:border-gs500",
+}
+
+const HOVER = {
+  light:
+    "hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-p500 hover:to-s400",
+  dark: "hover:border-s600 hover:text-s600",
 }
 
 export default function SecondaryButton({
@@ -17,13 +23,13 @@ export default function SecondaryButton({
   action,
   icon,
   disabled = false,
+  classes,
 }) {
-  let addStyles = "hover:border-s600 hover:text-s600"
   return (
     <button
-      className={`flex items-center justify-center text-blanco bg-transparent border-blanco rounded-[4px] ${
+      className={`flex items-center justify-center bg-transparent rounded-[4px] ${
         SIZES[size]
-      } ${THEMES[theme]} ${!disabled && addStyles}`}
+      } ${THEMES[theme]} ${!disabled && HOVER[theme]} ${classes}`}
       disabled={disabled}
       onClick={action}
     >

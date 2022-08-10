@@ -87,7 +87,7 @@ export default function PanelTables({
           <SecondaryButton
             text={editMode ? "Dejar de mover" : "Mover mesas"}
             size="sm"
-            theme="light"
+            theme="dark"
             icon="move"
             action={() => updateEditMode(!editMode)}
           />

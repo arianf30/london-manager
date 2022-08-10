@@ -41,7 +41,7 @@ export default function OpenTable({ table }) {
         <SecondaryButton
           text="Abrir"
           size="sm"
-          theme="light"
+          theme="dark"
           action={handleSubmit}
         />
       </div>
@@ -51,18 +51,16 @@ export default function OpenTable({ table }) {
             options={["Ramiro", "Elisa", "Florencia"]}
             label="Mozo (obligatorio)"
             placeholder="Seleccioná un mozo"
-            selected=""
-            required
             inputRef={mozoRef}
+            required
           />
           <InputSelect
-            options={["2", "4", "Más de 5"]}
+            options={[1, 2, 3, 4, "Más de 5"]}
             label="Cantidad de personas"
             placeholder="Cantidad de personas"
-            selected=""
             classes="mt-4"
-            required
             inputRef={cantPersonasRef}
+            required
           />
           <InputText
             placeholder="Nombre de un comensal"

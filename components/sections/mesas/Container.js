@@ -7,7 +7,7 @@ import PanelSaleProducts from "components/panels/sale_products/PanelSaleProducts
 import SaleControllers from "components/sections/mesas/SaleControllers"
 import SaleItemsContainer from "components/panels/sale_items_resume/SaleItemsContainer"
 import SaleResume from "components/panels/sale_items_resume/SaleResume"
-import PaymentSale from "components/modals/PaymentSale"
+import PaymentSale from "components/modals/PaymentSale/PaymentSale"
 import SectionNavbar from "components/navbars/SectionNavbar"
 import PanelTables from "components/sections/mesas/PanelTables"
 import OpenTable from "components/sections/mesas/OpenTable"
@@ -21,6 +21,9 @@ export default function Container() {
   const { pop, section, modal } = router.query
   const {
     config,
+    client,
+    invoice,
+    updateInvoice,
     updateConfig,
     tables,
     updateTables,
@@ -32,7 +35,12 @@ export default function Container() {
     updateCommentItem,
     removeItem,
     promotions,
+    itemsInPromo,
     addItem,
+    payMethod,
+    updatePayMethod,
+    payMethodSecondary,
+    updatePayMethodSecondary,
   } = useContext(MesasContext)
 
   useEffect(() => {
@@ -71,7 +79,28 @@ export default function Container() {
         {modal && modal === "cobrar" && (
           <>
             <PaymentSale
-              onClose={() => router.push(`/pop/${pop}/${section}`)}
+              actionClose={() => router.push(`/pop/${pop}/${section}`)}
+              operation={{
+                type: "Mesa",
+                number: config?.table,
+                client: client,
+              }}
+              saleItems={saleItems}
+              promotions={promotions}
+              discountType={tables[config?.table]?.discountType}
+              discountQty={tables[config?.table]?.discountQty}
+              viewKeyboard={config?.viewKeyboard}
+              updateViewKeyboard={(value) =>
+                updateConfig("viewKeyboard", value)
+              }
+              invoice={invoice}
+              updateInvoice={updateInvoice}
+              viewPrint={config?.print}
+              updateViewPrint={(value) => updateConfig("print", value)}
+              payMethod={payMethod}
+              updatePayMethod={updatePayMethod}
+              payMethodSecondary={payMethodSecondary}
+              updatePayMethodSecondary={updatePayMethodSecondary}
             />
           </>
         )}
@@ -142,9 +171,11 @@ export default function Container() {
                       removeItem={removeItem}
                       viewDiscount={config?.viewDiscount}
                       viewSubtotal={config?.viewSubtotal}
-                      ptomotions={promotions}
+                      promotions={promotions}
+                      itemsInPromo={itemsInPromo}
                     />
                     <SaleResume
+                      maxHeight={173}
                       saleItems={saleItems}
                       promotions={promotions}
                       viewSubtotal={config?.viewSubtotal}

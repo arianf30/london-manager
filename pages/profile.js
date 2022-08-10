@@ -54,7 +54,7 @@ export default function Profile() {
                   <SecondaryButton
                     text="Descargar"
                     size="sm"
-                    theme="light"
+                    theme="dark"
                     icon="downloadCloud"
                   />
                 </div>

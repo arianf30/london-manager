@@ -26,6 +26,7 @@ const Articulos = async (req, res) => {
       "stock",
       "stock_negativo",
       "color",
+      "detalle_texto",
     ],
     where: {
       tipo_producto: {

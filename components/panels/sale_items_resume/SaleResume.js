@@ -3,12 +3,14 @@ import Icon from "components/svg/Icon"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import formatPriceNumber from "utils/formatPriceNumber"
-import calcTotal, {
-  calcDiscounts,
-  calcSubtotal,
+import calcSubtotal, {
+  calcDiscountGeneral,
+  calcDiscountProducts,
+  calcDiscountPromotions,
 } from "utils/prices/calcResumeSale"
 
 export default function SaleResume({
+  maxHeight,
   saleItems,
   promotions,
   viewSubtotal,
@@ -25,35 +27,34 @@ export default function SaleResume({
 }) {
   const router = useRouter()
   const { pop, section } = router.query
-  const subtotal = calcSubtotal(saleItems)
-  const discountProducts = calcDiscounts(saleItems)
-  const discountGeneral = () => {
-    if (discountType === "pesos") return formatPriceNumber(discountQty)
-    if (discountType === "percent") {
-      if (discountQty > 0) {
-        let totalForDiscount =
-          parseFloat(subtotal) + parseFloat(discountProducts)
-        return formatPriceNumber(
-          (totalForDiscount * parseFloat(discountQty)) / 100
-        )
-      }
-    }
-    return "$ 0,00"
-  }
-  const total = calcTotal(saleItems, discountType, discountQty)
+  const subtotal = parseFloat(calcSubtotal(saleItems))
+  const discountProducts = parseFloat(calcDiscountProducts(saleItems))
+  const discountPromotions = parseFloat(calcDiscountPromotions(promotions))
+  const discountGeneral = parseFloat(
+    calcDiscountGeneral(
+      subtotal + discountProducts + discountPromotions,
+      discountQty,
+      discountType
+    )
+  )
+  const totalWithinDiscountGeneral =
+    subtotal + discountProducts + discountPromotions
+  const total =
+    subtotal + discountProducts + discountPromotions + discountGeneral
 
   const totalString = formatPriceNumber(total).toString()
   const totalSep = totalString.split(",")
 
   useEffect(() => {
-    const totalWithinDiscount = calcTotal(saleItems, "percent", 0)
-    if (parseFloat(discountQty) > totalWithinDiscount) {
-      updateDiscountQty(totalWithinDiscount)
+    if (parseFloat(discountQty) > totalWithinDiscountGeneral) {
+      updateDiscountQty(totalWithinDiscountGeneral)
     }
   }, [discountQty, total])
 
   return (
-    <div className="w-full h-auto bg-gs550 box-border">
+    <div
+      className={`w-full h-auto bg-gs550 box-border max-h-[calc(100%_-_${maxHeight}px)] overflow-auto`}
+    >
       {/* SUBTOTAL */}
       <button
         className="flex items-center justify-between w-full h-[38px] text-blanco px-4 border-b-[1px] border-gs500"
@@ -82,15 +83,24 @@ export default function SaleResume({
         </div>
       )}
       {viewSubtotal && promotions?.length > 0 && (
-        <div className="flex items-center justify-between w-full h-[38px] text-blanco px-4 border-b-[1px] border-gs500">
-          <div className="flex items-center">
-            <Icon svg="fire" classes="text-e500 h-[20.5px]" />
-            <span className="text-bs ml-2">Descuentos de productos</span>
-          </div>
-          <div className="flex text-bs">
-            {formatPriceNumber(discountProducts)}
-          </div>
-        </div>
+        <>
+          {promotions.map((promo, index) => {
+            return (
+              <div
+                key={`promo-${promo.id}-${index}`}
+                className="flex items-center justify-between w-full h-[38px] text-blanco px-4 border-b-[1px] border-gs500"
+              >
+                <div className="flex items-center">
+                  <Icon svg="fire" classes="text-e500 h-[20.5px]" />
+                  <span className="text-bs ml-2">{promo.name}</span>
+                </div>
+                <div className="flex text-bs">
+                  {formatPriceNumber(promo.discount)}
+                </div>
+              </div>
+            )
+          })}
+        </>
       )}
 
       {/* DESCUENTOS */}
@@ -105,7 +115,9 @@ export default function SaleResume({
             classes="text-blanco h-4 w-4"
           />
         </div>
-        <div className="flex text-ss font-bold">{discountGeneral()}</div>
+        <div className="flex text-ss font-bold">
+          {formatPriceNumber(discountGeneral)}
+        </div>
       </button>
       {viewDiscount && (
         <div className="flex items-center justify-between w-full h-[38px] text-blanco pl-3 pr-4 border-b-[1px] border-gs500">

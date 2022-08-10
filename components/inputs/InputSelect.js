@@ -7,7 +7,8 @@ export const InputSelect = ({
   inputRef,
   selected,
   options,
-  onChange,
+  icon,
+  onChange = () => null,
   error,
   descripcion,
   classes,
@@ -18,21 +19,34 @@ export const InputSelect = ({
       <label className="block text-ls text-gs700 mb-1 truncate">{label}</label>
 
       <div className="relative">
+        {icon && (
+          <div className="absolute left-4 top-[10px] h-5 w-5 text-gs400">
+            <Icon svg={icon} />
+          </div>
+        )}
         <select
-          ref={inputRef}
+          ref={inputRef || null}
           name={name}
-          className="flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs-400 px-3 focus:border-2 focus:px-[11px] appearance-none"
-          onChange={onChange}
+          className={`flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs-400 px-3 pr-10 outline-none focus:shadow-[0_0_0_1px_rgba(86,93,152,1)] appearance-none truncate ${
+            icon && "pl-[44px]"
+          }`}
+          onChange={(e) => onChange(e.target.value)}
           required={required}
-          defaultValue={selected}
+          defaultValue={selected || null}
         >
-          <option value="" disabled className="text-e500">
-            {placeholder}
-          </option>
+          {placeholder && (
+            <option value="" disabled selected className="text-e500">
+              {placeholder}
+            </option>
+          )}
           {options?.map((opt, i) => {
             const value = opt?.value ?? opt
             const label = opt?.label ?? opt
-            return <option key={`sel_${value}_${i}`}>{label}</option>
+            return (
+              <option value={value} key={`sel_${value}_${i}`}>
+                {label}
+              </option>
+            )
           })}
         </select>
         <div className="absolute h-5 w-5 right-3 top-[10px] text-gs500">

@@ -5,7 +5,7 @@ export default function Tabs({ options, active, action }) {
   return (
     <div className="relative flex h-full overflow-x-auto">
       {options?.map((item, i) => (
-        <div className="relative w-[144px]" key={`tab-${i}]`}>
+        <div className="w-[144px]" key={`tab-${i}]`}>
           <TabsButton
             text={item.nombre}
             state={active === item.id ? true : false}
@@ -13,7 +13,7 @@ export default function Tabs({ options, active, action }) {
           />
           {active === item.id ? (
             <motion.div
-              className="underline absolute bottom-0 left-0 w-full h-[4px] bg-p500"
+              className="underline relative -top-[4px] w-full h-[4px] bg-p500"
               layoutId="underline"
             />
           ) : null}

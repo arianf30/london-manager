@@ -2,36 +2,6 @@ import articleDiscountCalc from "./articleDiscountCalc"
 import priceToShow from "./priceToShow"
 import salePriceCalc from "./salePriceCalc"
 
-const calcTotal = (saleItems, discountType, discountQty) => {
-  let calcTotal = 0
-  if (saleItems && Array.isArray(saleItems)) {
-    saleItems.forEach((item) => {
-      const price = salePriceCalc(
-        item?.tipo_precio,
-        item?.precio_venta,
-        item?.precio_compra
-      )
-      const discount = articleDiscountCalc(
-        price,
-        item?.descuento_cant,
-        item?.descuento_tipo
-      )
-      const priceQty = priceToShow(price, discount, item?.qty)
-      calcTotal += parseFloat(priceQty)
-    })
-  }
-  if (discountQty) {
-    if (discountType === "pesos") {
-      calcTotal = calcTotal - parseFloat(discountQty)
-    }
-    if (discountType === "percent") {
-      const discTot = (calcTotal * parseFloat(discountQty)) / 100
-      calcTotal = calcTotal - discTot
-    }
-  }
-  return parseFloat(calcTotal).toFixed(2)
-}
-
 export const calcSubtotal = (saleItems) => {
   let calcSubtotal = 0
   if (saleItems.length > 0) {
@@ -49,7 +19,7 @@ export const calcSubtotal = (saleItems) => {
   return parseFloat(calcSubtotal).toFixed(2)
 }
 
-export const calcDiscounts = (saleItems) => {
+export const calcDiscountProducts = (saleItems) => {
   let calcDiscounts = 0
   if (saleItems.length > 0) {
     saleItems.forEach((item) => {
@@ -63,12 +33,39 @@ export const calcDiscounts = (saleItems) => {
         item?.descuento_cant,
         item?.descuento_tipo
       )
-      const priceQty = priceToShow(0, discount, item?.qty)
+      const priceQty =
+        item?.descuento_tipo === "pesos"
+          ? priceToShow(0, discount, 1)
+          : priceToShow(0, discount, item?.qty)
       calcDiscounts += parseFloat(priceQty)
     })
   }
 
-  return parseFloat(calcDiscounts).toFixed(2)
+  return parseFloat(-calcDiscounts).toFixed(2)
 }
 
-export default calcTotal
+export const calcDiscountPromotions = (promotions) => {
+  let discountPromotions = 0
+  if (promotions) {
+    promotions.forEach((item) => {
+      discountPromotions += parseFloat(item.discount)
+    })
+  }
+  return parseFloat(discountPromotions).toFixed(2)
+}
+
+export const calcDiscountGeneral = (
+  subtotalWithDiscounts,
+  discountQty,
+  discountType
+) => {
+  const discountGeneral = articleDiscountCalc(
+    subtotalWithDiscounts,
+    discountQty,
+    discountType
+  )
+
+  return parseFloat(discountGeneral).toFixed(2)
+}
+
+export default calcSubtotal

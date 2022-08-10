@@ -1,7 +1,9 @@
 import { dbFirestore } from "db/firebase"
 import { ref, set, update } from "firebase/database"
+import useQueryArticlesToSale from "hooks/querys/articles/useQueryArticlesToSale"
 import { useRouter } from "next/router"
 import { createContext, useEffect, useReducer } from "react"
+import applyPromotions from "utils/applyPromotions"
 
 const MesasContext = createContext({})
 
@@ -16,6 +18,7 @@ const ACTIONS = {
   UPDATE_PAY_METHOD_SECONDARY: "update_pay_method_secondary",
   UPDATE_SALE_ITEMS: "update_sale_items",
   UPDATE_PROMOTIONS: "update_promotions",
+  UPDATE_ITEMS_IN_PROMO: "update_items_in_promo",
 }
 
 const ACTIONS_REDUCERS = {
@@ -50,6 +53,10 @@ const ACTIONS_REDUCERS = {
     ...state,
     promotions: [...action.payload],
   }),
+  [ACTIONS.UPDATE_ITEMS_IN_PROMO]: (state, action) => ({
+    ...state,
+    itemsInPromo: action.payload,
+  }),
 }
 
 const reducer = (state, action) => {
@@ -59,6 +66,7 @@ const reducer = (state, action) => {
 
 export function Provider({ children }) {
   const { pop } = useRouter().query
+  const { data: articles } = useQueryArticlesToSale()
   const [state, dispatch] = useReducer(reducer, {
     config: {
       filter: "",
@@ -93,6 +101,7 @@ export function Provider({ children }) {
     },
     saleItems: [],
     promotions: [],
+    itemsInPromo: [],
   })
 
   useEffect(() => {
@@ -179,9 +188,26 @@ export function Provider({ children }) {
   }
 
   const updateSaleItems = (todo) => {
+    // BUSCAR PROMOCIONES
+    const promotionArticles = articles?.filter(
+      (item) => item.tipo_producto === "promocion"
+    )
+    const { articlesInPromo, promotions } = applyPromotions(
+      promotionArticles,
+      todo
+    )
+
     dispatch({
       type: ACTIONS.UPDATE_SALE_ITEMS,
       payload: todo,
+    })
+    dispatch({
+      type: ACTIONS.UPDATE_PROMOTIONS,
+      payload: promotions,
+    })
+    dispatch({
+      type: ACTIONS.UPDATE_ITEMS_IN_PROMO,
+      payload: articlesInPromo,
     })
   }
 
@@ -195,6 +221,43 @@ export function Provider({ children }) {
   }
 
   const addItem = (item) => {
+    if (item.tipo_producto === "promocion") {
+      let newSaleItems = [...state.saleItems]
+      const itemsPromo = item.detalle_texto.split("/")
+      itemsPromo.forEach((element, index) => {
+        const articlesInItemPrev = element.split("-")
+        const articlesInItem = articlesInItemPrev?.filter((elem) => elem !== "")
+        const indexAdd = articles?.findIndex(
+          (elem) => elem.id === +articlesInItem[0]
+        )
+        const articleAdd = articles[indexAdd] || null
+        const search = newSaleItems.findIndex((e) => e.id === +articleAdd?.id)
+        if (search > -1) {
+          newSaleItems = newSaleItems.map((e) => {
+            if (e.id === articleAdd?.id) {
+              return { ...articleAdd, qty: +e.qty + 1 * state?.config.qty ?? 1 }
+            }
+            return e
+          })
+        } else {
+          newSaleItems.push({
+            ...articleAdd,
+            qty: 1 * state?.config.qty ?? 1,
+          })
+        }
+      })
+      set(
+        ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}/saleItems`),
+        {
+          ...newSaleItems,
+        }
+      )
+      dispatch({
+        type: ACTIONS.UPDATE_CONFIG,
+        payload: { ...state.config, qty: 1 },
+      })
+      return
+    }
     existItem(item.id)
       ? incrementItem(item.id, state.config.qty)
       : newItem(item)
@@ -241,7 +304,7 @@ export function Provider({ children }) {
     if (foundIndex > -1) {
       const newQty =
         parseFloat(state.saleItems[foundIndex].qty) - parseFloat(qty)
-      if (newQty > 1) {
+      if (newQty > 0) {
         update(
           ref(
             dbFirestore,
@@ -293,6 +356,8 @@ export function Provider({ children }) {
         updatePayMethodSecondary,
         saleItems: state.saleItems,
         updateSaleItems,
+        promotions: state.promotions,
+        itemsInPromo: state.itemsInPromo,
         addItem,
         incrementItem,
         decrementItem,

@@ -4,7 +4,7 @@ export const InputText = ({
   label = "Label",
   inputRef,
   value,
-  onChange,
+  onChange = () => null,
   error,
   descripcion,
   classes,
@@ -15,12 +15,12 @@ export const InputText = ({
       <label className="block text-ls text-gs700 mb-1 truncate">{label}</label>
       <input
         type="text"
-        ref={inputRef}
+        ref={inputRef || null}
         name={name}
-        value={value}
-        className="flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs400 px-3 focus:border-2 focus:px-[11px]"
+        value={value || null}
+        className="flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs400 px-3 outline-none focus:shadow-[0_0_0_1px_rgba(86,93,152,1)]"
         placeholder={placeholder}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
         required={required}
       />
       {error && (

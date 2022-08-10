@@ -25,7 +25,7 @@ export default function SaleControllers({
         </div>
         <div className="flex gap-2">
           {/* <SecondaryButton text="Editar" size="sm" theme="light" /> */}
-          <SecondaryButton text="Cerrar" size="sm" theme="light" />
+          <SecondaryButton text="Cerrar" size="sm" theme="dark" />
         </div>
       </div>
       <div className="flex items-center justify-between w-full h-[75px] bg-gs600 px-4">
@@ -37,10 +37,13 @@ export default function SaleControllers({
         <div className="flex items-center justify-between min-w-[107px]">
           <PrimaryButton
             text={viewProducts ? "Ocultar" : "Mostrar"}
-            icon="image"
+            icon={viewProducts ? "eyeOff" : "eye"}
             size="sm"
             theme="light"
-            classes={`w-full ${viewProducts && "animate-pulse"}`}
+            classes={`w-full ${
+              viewProducts &&
+              "animate-pulse bg-e500 hover:bg-[linear-gradient(92.28deg,#CB5340_0%,#CB5340_103.32%)]"
+            }`}
             action={() => updateViewProducts(!viewProducts)}
           />
         </div>
