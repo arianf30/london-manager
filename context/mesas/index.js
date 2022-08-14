@@ -336,6 +336,48 @@ export function Provider({ children }) {
     })
   }
 
+  const addCommands = (commands) => {
+    const newItems = state.saleItems.map((item) => {
+      if (commands.get(item.id)) {
+        if (item?.commands) {
+          return {
+            ...item,
+            commands: [...item?.commands, { ...commands.get(item.id) }],
+          }
+        }
+        return {
+          ...item,
+          commands: [{ ...commands.get(item.id) }],
+        }
+      }
+      return { ...item }
+    })
+
+    set(ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}/saleItems`), {
+      ...newItems,
+    })
+    dispatch({
+      type: ACTIONS.UPDATE_SALE_ITEMS,
+      payload: newItems,
+    })
+  }
+
+  const updateCommandDelivered = (itemId, commandId, value) => {
+    const foundIndex = state.saleItems.findIndex((item) => item.id === itemId)
+    if (foundIndex > -1) {
+      console.log("itemId", itemId)
+      console.log("commandId", commandId)
+      console.log("value", value)
+      update(
+        ref(
+          dbFirestore,
+          `pop/${pop}/mesas/${state.config.table}/saleItems/${foundIndex}/commands/${commandId}`
+        ),
+        { delivered: value }
+      )
+    }
+  }
+
   const clearAllItems = () => {
     delete ref(dbFirestore, `pop/${pop}/mesas/${state.config.table}/saleItems`)
   }
@@ -362,6 +404,8 @@ export function Provider({ children }) {
         incrementItem,
         decrementItem,
         updateCommentItem,
+        addCommands,
+        updateCommandDelivered,
         removeItem,
         clearAllItems,
       }}

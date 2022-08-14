@@ -2,7 +2,7 @@ import Icon from "components/svg/Icon"
 
 export const InputSelect = ({
   name,
-  placeholder = "Text placeholder",
+  placeholder = "",
   label = "Label",
   inputRef,
   selected,
@@ -15,7 +15,7 @@ export const InputSelect = ({
   required,
 }) => {
   return (
-    <div className={classes}>
+    <div className={`select-none ${classes}`}>
       <label className="block text-ls text-gs700 mb-1 truncate">{label}</label>
 
       <div className="relative">

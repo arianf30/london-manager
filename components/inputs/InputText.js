@@ -1,6 +1,6 @@
 export const InputText = ({
   name,
-  placeholder = "Text placeholder",
+  placeholder = "",
   label = "Label",
   inputRef,
   value,
@@ -11,7 +11,7 @@ export const InputText = ({
   required,
 }) => {
   return (
-    <div className={classes}>
+    <div className={`select-none ${classes}`}>
       <label className="block text-ls text-gs700 mb-1 truncate">{label}</label>
       <input
         type="text"

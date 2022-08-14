@@ -1,6 +1,5 @@
 import IconRectangleButton from "components/buttons/IconRectangleButton"
 import Icon from "components/svg/Icon"
-import { useRouter } from "next/router"
 import { useEffect } from "react"
 import formatPriceNumber from "utils/formatPriceNumber"
 import calcSubtotal, {
@@ -24,9 +23,8 @@ export default function SaleResume({
   discountQty,
   updateDiscountQty,
   cashBoard,
+  openCash,
 }) {
-  const router = useRouter()
-  const { pop, section } = router.query
   const subtotal = parseFloat(calcSubtotal(saleItems))
   const discountProducts = parseFloat(calcDiscountProducts(saleItems))
   const discountPromotions = parseFloat(calcDiscountPromotions(promotions))
@@ -167,7 +165,7 @@ export default function SaleResume({
             icon="caja"
             classes="bg-s400"
             classesBox="p-[10%]"
-            action={() => router.push(`/pop/${pop}/${section}?modal=cobrar`)}
+            action={() => openCash()}
           />
         )}
       </div>

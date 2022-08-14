@@ -4,7 +4,7 @@ import salePriceCalc from "./salePriceCalc"
 
 export const calcSubtotal = (saleItems) => {
   let calcSubtotal = 0
-  if (saleItems.length > 0) {
+  if (saleItems?.length > 0) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
         item?.tipo_precio,
@@ -21,7 +21,7 @@ export const calcSubtotal = (saleItems) => {
 
 export const calcDiscountProducts = (saleItems) => {
   let calcDiscounts = 0
-  if (saleItems.length > 0) {
+  if (saleItems?.length > 0) {
     saleItems.forEach((item) => {
       const price = salePriceCalc(
         item?.tipo_precio,

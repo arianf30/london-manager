@@ -4,6 +4,7 @@ import { QueryClient } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister"
+import { Toaster } from "react-hot-toast"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,7 @@ export default function App({
         ) : (
           <Component {...pageProps} />
         )}
+        <Toaster position="top-right" reverseOrder={false} />
       </SessionProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </PersistQueryClientProvider>

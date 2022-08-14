@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import useRole from "hooks/useRole"
 import MesasContext from "context/mesas"
@@ -7,18 +7,21 @@ import PanelSaleProducts from "components/panels/sale_products/PanelSaleProducts
 import SaleControllers from "components/sections/mesas/SaleControllers"
 import SaleItemsContainer from "components/panels/sale_items_resume/SaleItemsContainer"
 import SaleResume from "components/panels/sale_items_resume/SaleResume"
-import PaymentSale from "components/modals/PaymentSale/PaymentSale"
 import SectionNavbar from "components/navbars/SectionNavbar"
 import PanelTables from "components/sections/mesas/PanelTables"
 import OpenTable from "components/sections/mesas/OpenTable"
 import { dbFirestore } from "db/firebase"
 import { off, onValue, ref } from "firebase/database"
 import CardEmptyTable from "components/svg/icons/CardEmptyTable"
+import PaymentSale from "components/modals/PaymentSale/PaymentSale"
+import PrinterConfig from "components/modals/PrinterConfig.js/PrinterConfig"
+import { AnimatePresence } from "framer-motion"
 
 export default function Container() {
+  const [modal, setModal] = useState(null)
   const router = useRouter()
   const { permissions, permissionsSection, isLoading } = useRole()
-  const { pop, section, modal } = router.query
+  const { pop, section } = router.query
   const {
     config,
     client,
@@ -41,6 +44,8 @@ export default function Container() {
     updatePayMethod,
     payMethodSecondary,
     updatePayMethodSecondary,
+    addCommands,
+    updateCommandDelivered,
   } = useContext(MesasContext)
 
   useEffect(() => {
@@ -76,10 +81,13 @@ export default function Container() {
     return (
       <>
         {/* MODALS */}
-        {modal && modal === "cobrar" && (
-          <>
+        <AnimatePresence>
+          {modal && modal === "impresoras" && (
+            <PrinterConfig setModal={() => setModal()} />
+          )}
+          {modal && modal === "cobrar" && (
             <PaymentSale
-              actionClose={() => router.push(`/pop/${pop}/${section}`)}
+              actionClose={() => setModal(null)}
               operation={{
                 type: "Mesa",
                 number: config?.table,
@@ -102,8 +110,8 @@ export default function Container() {
               payMethodSecondary={payMethodSecondary}
               updatePayMethodSecondary={updatePayMethodSecondary}
             />
-          </>
-        )}
+          )}
+        </AnimatePresence>
 
         {/* NAVBAR */}
         <SectionNavbar
@@ -113,7 +121,7 @@ export default function Container() {
             image: permissions?.popJerarquia.companyImage,
           }}
           permissionsSection={permissionsSection}
-          itemsDropdown={dropdownSection(section)}
+          itemsDropdown={dropdownSection(section, setModal)}
         />
 
         {/* CONTENT */}
@@ -153,6 +161,7 @@ export default function Container() {
                   <>
                     <SaleControllers
                       table={config?.table}
+                      lounge={config?.lounge}
                       tables={tables}
                       viewProducts={config?.viewProducts}
                       updateViewProducts={(value) =>
@@ -161,6 +170,11 @@ export default function Container() {
                       qty={config?.qty}
                       updateQty={(newQty) => updateConfig("qty", newQty)}
                       addItem={addItem}
+                      saleItems={saleItems}
+                      promotions={promotions}
+                      discountType={tables[config?.table]?.discountType}
+                      discountQty={tables[config?.table]?.discountQty}
+                      addCommands={addCommands}
                     />
                     <SaleItemsContainer
                       controllersHeight={339}
@@ -173,6 +187,7 @@ export default function Container() {
                       viewSubtotal={config?.viewSubtotal}
                       promotions={promotions}
                       itemsInPromo={itemsInPromo}
+                      updateCommandDelivered={updateCommandDelivered}
                     />
                     <SaleResume
                       maxHeight={173}
@@ -206,6 +221,7 @@ export default function Container() {
                         updateDiscount("discountQty", newDis)
                       }}
                       cashBoard
+                      openCash={() => setModal("cobrar")}
                     />
                   </>
                 )}

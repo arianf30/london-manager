@@ -4,6 +4,9 @@ import articleDiscountCalc from "utils/prices/articleDiscountCalc"
 import priceToShow from "utils/prices/priceToShow"
 import Icon from "components/svg/Icon"
 import formatPriceNumber from "utils/formatPriceNumber"
+import { diffDate, nowDateTime } from "utils/dateNow"
+import InputCheckbox from "components/inputs/InputCeckbox"
+import DateDiff from "../DateDiff"
 
 export default function SaleItem({
   item,
@@ -12,6 +15,7 @@ export default function SaleItem({
   updateCommentItem,
   removeItem,
   qtyInPromo,
+  updateCommandDelivered,
 }) {
   const [state, setState] = useState({
     menu: false,
@@ -31,6 +35,12 @@ export default function SaleItem({
   const priceItem = priceToShow(price, 0, item.qty)
   const priceQty = priceToShow(price, discount, item.qty)
 
+  let totalPrints = 0
+  if (item?.commands) {
+    item?.commands.forEach((it) => {
+      totalPrints += parseInt(it.qty)
+    })
+  }
   return (
     <>
       <div className="flex justify-between w-full h-[60px] bg-blanco border-b-[1px] border-gs200 text-negro">
@@ -139,6 +149,7 @@ export default function SaleItem({
                     item.printed && "text-s400"
                   } truncate pl-[6px] outline-none`}
                   onChange={(e) => updateCommentItem(item.id, e.target.value)}
+                  disabled={item.qty === totalPrints && true}
                 />
               </>
             )}
@@ -164,6 +175,44 @@ export default function SaleItem({
           </button>
         </div>
       )}
+
+      {/* MENU COMANDA */}
+      {item?.commands &&
+        item.commands.map((comm, index) => (
+          <div
+            key={`commands-${item.id}-${index}`}
+            className="flex items-center justify-between h-7 w-full bg-p50 px-2 text-p800 text-bxs select-none"
+          >
+            <div className="flex items-center font-bold">
+              <div className="h-5 w-5 mr-2">
+                <Icon svg="clock" />
+              </div>
+              Tiempo:{" "}
+              {comm.delivered !== "" ? (
+                diffDate(comm.delivered, comm.date)
+              ) : (
+                <DateDiff date1="now" date2={comm.date} />
+              )}
+            </div>
+            <div className="flex gap-4">
+              <div>
+                {comm.qty} {item.con_comanda == 1 && "en cocina"}
+                {item.con_comanda == 2 && "impreso"}
+              </div>
+              <InputCheckbox
+                text={"Entregado"}
+                state={comm.delivered ? true : false}
+                action={() =>
+                  updateCommandDelivered(
+                    item.id,
+                    index,
+                    nowDateTime(new Date())
+                  )
+                }
+              />
+            </div>
+          </div>
+        ))}
     </>
   )
 }

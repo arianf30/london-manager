@@ -60,7 +60,13 @@ const PaymentSale = ({
   }, [payMethod?.id, payMethodSecondary?.id])
 
   return (
-    <div className="flex flex-row items-center h-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+      className="flex flex-row items-center h-auto"
+    >
       {/* BLOQUE FACTURACION */}
       <AnimatePresence>
         {invoice?.active && (
@@ -386,7 +392,7 @@ const PaymentSale = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   )
 }
 

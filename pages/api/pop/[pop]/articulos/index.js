@@ -23,6 +23,7 @@ const Articulos = async (req, res) => {
       "precio_venta",
       "descuento_tipo",
       "descuento_cant",
+      "con_comanda",
       "stock",
       "stock_negativo",
       "color",

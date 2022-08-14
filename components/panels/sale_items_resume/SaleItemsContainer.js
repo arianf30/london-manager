@@ -19,6 +19,7 @@ export default function SaleItemsContainer({
   viewSubtotal,
   promotions,
   itemsInPromo,
+  updateCommandDelivered,
 }) {
   const discountCant = calcDiscountProducts(saleItems)
   let restSize = +controllersHeight
@@ -52,6 +53,7 @@ export default function SaleItemsContainer({
                 qtyInPromo={
                   itemsInPromo instanceof Map ? itemsInPromo.get(item.id) : null
                 }
+                updateCommandDelivered={updateCommandDelivered}
               />
             </div>
           )

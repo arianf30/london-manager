@@ -18,16 +18,16 @@ export default function PrimaryButton({
   icon,
   disabled = false,
   classes,
+  buttonRef = null,
 }) {
   let addStyles =
     "hover:bg-[linear-gradient(92.28deg,#5E5EA7_0%,#1C9C7D_103.32%)]"
   return (
     <button
-      className={`flex items-center justify-center text-blanco bg-p500 rounded-[4px] ${
-        SIZES[size]
-      } ${THEMES[theme]} ${!disabled && addStyles} ${classes}`}
+      className={`flex items-center justify-center text-blanco bg-p500 rounded-[4px] ${SIZES[size]} ${THEMES[theme]} ${addStyles} ${classes}`}
       disabled={disabled}
       onClick={action}
+      ref={buttonRef}
     >
       {icon && (
         <div className="h-3 w-3 mr-[5px]">

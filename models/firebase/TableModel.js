@@ -1,3 +1,5 @@
+import { nowDateTime } from "utils/dateNow"
+
 const TableModel = (idUser, persons, idClient = 0, comment) => {
   return {
     status: "open",
@@ -5,7 +7,7 @@ const TableModel = (idUser, persons, idClient = 0, comment) => {
     idClient: idClient,
     persons: persons,
     comment: comment,
-    openAt: "",
+    openAt: nowDateTime(new Date()),
     closeAt: "",
   }
 }

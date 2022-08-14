@@ -24,7 +24,7 @@ export default function SectionNavbar({
         theme="dark"
         action={() => router.push(`/pop/${pop}/menu`)}
       />
-      <h1 className="text-blanco font-bold">{title}</h1>
+      <h1 className="text-blanco font-bold capitalize">{title}</h1>
 
       <div className="flex h-full items-center gap-1">
         {addButton === "fullscreen" && (

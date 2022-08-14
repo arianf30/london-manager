@@ -7,23 +7,27 @@ import useQuerySalones from "hooks/querys/mesas/useQuerySalones"
 import useQueryMesas from "hooks/querys/mesas/useQueryMesas"
 import { motion } from "framer-motion"
 import { postMesa } from "services/pop/mesas"
+import DateDiff from "components/panels/DateDiff"
 
 const LAYOUTS = {
-  "1s": "h-10 w-10 rounded-[3px]",
-  "1m": "h-16 w-16 rounded-[3px]",
-  "1l": "h-24 w-24 rounded-[3px]",
-  "2s": "h-10 w-10 rounded-full",
-  "2m": "h-16 w-16 rounded-full",
-  "2l": "h-24 w-24 rounded-full",
-  "3s": "h-10 w-16 rounded-[3px]",
-  "3m": "h-16 w-28 rounded-[3px]",
-  "3l": "h-24 w-36 rounded-[3px]",
-  "4s": "h-6 w-16 rounded-[3px]",
-  "4m": "h-12 w-28 rounded-[3px]",
-  "4l": "h-16 w-40 rounded-[3px]",
-  "5s": "w-10 h-16 rounded-[3px]",
-  "5m": "w-16 h-28 rounded-[3px]",
-  "5l": "w-24 h-36 rounded-[3px]",
+  "1s": "h-[40px] w-[40px] rounded-full",
+  "1m": "h-[80px] w-[80px] rounded-full",
+  "1l": "h-[80px] w-[80px] rounded-full",
+  "2s": "h-[40px] w-[40px] rounded-[4px]",
+  "2m": "h-[56px] w-[56px] rounded-[4px]",
+  "2l": "h-[56px] w-[56px] rounded-[4px]",
+  "3s": "h-[40px] w-[80px] rounded-[4px]",
+  "3m": "h-[56px] w-[112px] rounded-[4px]",
+  "3l": "h-[56px] w-[112px] rounded-[4px]",
+  "4s": "h-[40px] w-[80px] rounded-[4px]",
+  "4m": "h-[56px] w-[112px] rounded-[4px]",
+  "4l": "h-[56px] w-[112px] rounded-[4px]",
+  "5s": "h-[168px] w-[32px] rounded-[4px]",
+  "5m": "h-[224px] w-[32px] rounded-[4px]",
+  "5l": "h-[224px] w-[32px] rounded-[4px]",
+  "6s": "h-[32px] w-[168px] rounded-[4px]",
+  "6m": "h-[48px] w-[224px] rounded-[4px]",
+  "6l": "h-[48px] w-[224px] rounded-[4px]",
 }
 
 const STATE = {
@@ -100,16 +104,17 @@ export default function PanelTables({
           ref={constraintsRef}
         >
           {mesas?.map((mesa, index) => {
+            console.log(mesa)
             if (mesa.id_salon === lounge) {
               return (
                 <motion.div
                   key={`mesa-${index}`}
                   id={`table-move-${mesa.id}`}
-                  className={`inline-flex items-center justify-center ${
+                  className={`relative inline-flex items-center justify-center ${
                     LAYOUTS[mesa.size]
                   } ${
                     STATE[tables[mesa.id]?.status ?? "close"]
-                  } border-[3px] text-ss font-bold text-blanco ${
+                  } border-[3px] box-content text-ss font-bold text-blanco ${
                     table === mesa.id && "border-a400"
                   } ${editMode && "cursor-move"}`}
                   dragConstraints={constraintsRef}
@@ -135,6 +140,11 @@ export default function PanelTables({
                   }}
                 >
                   {mesa.id}
+                  {tables[mesa.id]?.openAt && (
+                    <div className="absolute font-normal -bottom-5 text-cap text-center text-gs400">
+                      <DateDiff date1="now" date2={tables[mesa.id]?.openAt} />
+                    </div>
+                  )}
                 </motion.div>
               )
             }
