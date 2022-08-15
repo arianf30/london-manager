@@ -168,6 +168,15 @@ export function Provider({ children }) {
   }
 
   const updatePayMethod = (prop, value) => {
+    if (value === "undefined") {
+      dispatch({
+        type: ACTIONS.UPDATE_PAY_METHOD,
+        payload: {
+          ...prop,
+        },
+      })
+      return
+    }
     dispatch({
       type: ACTIONS.UPDATE_PAY_METHOD,
       payload: {
@@ -178,6 +187,15 @@ export function Provider({ children }) {
   }
 
   const updatePayMethodSecondary = (prop, value) => {
+    if (value === "undefined") {
+      dispatch({
+        type: ACTIONS.UPDATE_PAY_METHOD_SECONDARY,
+        payload: {
+          ...prop,
+        },
+      })
+      return
+    }
     dispatch({
       type: ACTIONS.UPDATE_PAY_METHOD_SECONDARY,
       payload: {

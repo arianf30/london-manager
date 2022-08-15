@@ -16,6 +16,7 @@ import CardEmptyTable from "components/svg/icons/CardEmptyTable"
 import PaymentSale from "components/modals/PaymentSale/PaymentSale"
 import PrinterConfig from "components/modals/PrinterConfig.js/PrinterConfig"
 import { AnimatePresence } from "framer-motion"
+import LoadPermissions from "components/loaders/LoadPermissions"
 
 export default function Container() {
   const [modal, setModal] = useState(null)
@@ -249,7 +250,7 @@ export default function Container() {
   }
 
   if (isLoading) {
-    return <p>Cargando permisos...</p>
+    return <LoadPermissions />
   }
 
   return <p>No tenés permisos para acceder.</p>

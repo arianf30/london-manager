@@ -19,7 +19,7 @@ export default function Profile() {
                 email={user.correo_electronico}
                 avatar={`https://londonmanager.com/2021/${user.foto}`}
               />
-              <div className="relative h-[calc(100vh_-_105px)] bg-gs600">
+              <div className="relative h-[calc(100vh_-_105px)] min-h-[670px] bg-gs600">
                 <h1 className="font-bold text-blanco text-center pt-[7%] pb-[6%]">
                   ¡Bienvenid@ {user.nombre}! 👋
                 </h1>

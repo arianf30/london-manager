@@ -4,6 +4,7 @@ import CarouselMenu from "components/sections/menu/CarouselMenu"
 import IconsMenu from "components/sections/menu/IconsMenu"
 import useRole from "hooks/useRole"
 import Icon from "components/svg/Icon"
+import LoadPermissions from "components/loaders/LoadPermissions"
 
 export default function Menu() {
   const { permissions } = useRole()
@@ -73,7 +74,7 @@ export default function Menu() {
     )
   }
 
-  return <p>Cargando permisos...</p>
+  return <LoadPermissions />
 }
 
 Menu.auth = true

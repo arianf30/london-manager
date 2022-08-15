@@ -9,6 +9,7 @@ import SaleItemsContainer from "components/panels/sale_items_resume/SaleItemsCon
 import SaleResume from "components/panels/sale_items_resume/SaleResume"
 import PaymentSale from "components/modals/PaymentSale/PaymentSale"
 import SectionNavbar from "components/navbars/SectionNavbar"
+import LoadPermissions from "components/loaders/LoadPermissions"
 
 export default function Container() {
   const router = useRouter()
@@ -119,7 +120,7 @@ export default function Container() {
   }
 
   if (isLoading) {
-    return <p>Cargando permisos...</p>
+    return <LoadPermissions />
   }
 
   return <p>No tenés permisos para acceder.</p>

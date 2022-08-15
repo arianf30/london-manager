@@ -15,7 +15,8 @@ import calcSubtotal, {
   calcDiscountPromotions,
 } from "utils/prices/calcResumeSale"
 import Icon from "components/svg/Icon"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import useQueryComprobantes from "hooks/querys/config_comprobantes/useQueryComprobantes"
 
 const PaymentSale = ({
   actionClose,
@@ -35,6 +36,9 @@ const PaymentSale = ({
   payMethodSecondary,
   updatePayMethodSecondary,
 }) => {
+  const pagoRef = useRef()
+  const pago2Ref = useRef()
+  const [focus, setFocus] = useState(0)
   const subtotal = parseFloat(calcSubtotal(saleItems))
   const discountProducts = parseFloat(calcDiscountProducts(saleItems))
   const discountPromotions = parseFloat(calcDiscountPromotions(promotions))
@@ -48,16 +52,133 @@ const PaymentSale = ({
   const total =
     subtotal + discountProducts + discountPromotions + discountGeneral
 
-  const pagoRef = useRef()
+  const { data: comprobantes } = useQueryComprobantes()
+
   useEffect(() => {
-    pagoRef.current.focus()
+    pagoRef?.current?.focus()
   }, [])
 
   useEffect(() => {
-    if (payMethod?.id === payMethodSecondary?.id) {
-      updatePayMethodSecondary("active", false)
+    if (payMethodSecondary?.active) {
+      pago2Ref?.current?.focus()
     }
-  }, [payMethod?.id, payMethodSecondary?.id])
+  }, [payMethodSecondary?.active])
+
+  const updatePago = (value) => {
+    if (isNaN(value)) return
+    if (value.length > 11) return
+    if (
+      payMethodSecondary?.active &&
+      parseFloat(value) + parseFloat(payMethodSecondary?.payWith) > total
+    ) {
+      updatePayMethod(
+        "payWith",
+        (total - parseFloat(payMethodSecondary?.payWith)).toFixed(2)
+      )
+      return
+    }
+    updatePayMethod("payWith", value)
+  }
+  const updatePago2 = (value) => {
+    if (isNaN(value)) return
+    if (value.length > 11) return
+    if (parseFloat(payMethod?.payWith) + parseFloat(value) > total) {
+      updatePayMethodSecondary(
+        "payWith",
+        (total - parseFloat(payMethod?.payWith)).toFixed(2)
+      )
+      return
+    }
+    updatePayMethodSecondary("payWith", value)
+  }
+  const insertKey = (addValue) => {
+    let insertRef = pagoRef
+    if (focus === 1) {
+      insertRef = pago2Ref
+    }
+    insertRef?.current?.focus()
+    let value = insertRef?.current?.value
+    let newValue = value + addValue
+    if (isNaN(newValue)) return
+    if (newValue.length > 11) return
+    if (focus === 1) {
+      updatePago2(newValue)
+      return
+    }
+    updatePago(newValue)
+  }
+  const insertPrice = (addValue) => {
+    let insertRef = pagoRef
+    if (focus === 1) {
+      insertRef = pago2Ref
+    }
+    insertRef?.current?.focus()
+    let value = insertRef?.current?.value || 0
+    let newValue = parseFloat(value) + parseFloat(addValue)
+    if (isNaN(newValue)) return
+    if (newValue.length > 11) return
+    if (focus === 1) {
+      updatePago2(parseFloat(newValue).toFixed(2))
+      return
+    }
+    updatePago(parseFloat(newValue).toFixed(2))
+  }
+  const removeKey = () => {
+    let insertRef = pagoRef
+    if (focus === 1) {
+      insertRef = pago2Ref
+    }
+    insertRef?.current?.focus()
+    let value = insertRef?.current?.value
+    if (value) {
+      if (focus === 1) {
+        updatePago2("")
+        insertRef.current.value = ""
+        return
+      }
+      updatePago("")
+      insertRef.current.value = ""
+    }
+  }
+
+  const suVuelto = () => {
+    let totalPago = parseFloat(payMethod?.payWith) || 0
+    let vuelto = 0
+    if (payMethodSecondary?.active) {
+      totalPago =
+        (parseFloat(payMethod.payWith) || 0) +
+        (parseFloat(payMethodSecondary.payWith) || 0)
+    }
+    vuelto = totalPago - total
+    if (vuelto < 0) {
+      vuelto = 0
+    }
+    return formatPriceNumber(vuelto)
+  }
+  const autocompletePay = (payId) => {
+    let valueAutocomplete = total
+    if (payMethodSecondary?.active) {
+      if (payId === 0) {
+        if ((parseFloat(payMethodSecondary?.payWith) || 0) < total) {
+          valueAutocomplete =
+            total - (parseFloat(payMethodSecondary?.payWith) || 0)
+          updatePayMethod("payWith", valueAutocomplete.toFixed(2))
+          return
+        }
+        updatePayMethod("payWith", 0)
+        return
+      }
+      if ((parseFloat(payMethod?.payWith) || 0) < total) {
+        valueAutocomplete = total - (parseFloat(payMethod?.payWith) || 0)
+        updatePayMethodSecondary("payWith", valueAutocomplete.toFixed(2))
+        return
+      }
+      updatePayMethodSecondary("payWith", 0)
+      return
+    }
+    updatePayMethod("payWith", valueAutocomplete.toFixed(2))
+    return
+  }
 
   return (
     <motion.div
@@ -75,16 +196,21 @@ const PaymentSale = ({
             animate={{ width: 233, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ type: "Inertia" }}
-            className="relative left-2 top-6 overflow-x-auto box-border h-auto drop-shadow-[8px_0px_24px_rgba(86,93,152,0.12)]"
+            className="relative left-2 top-6 overflow-x-hidden box-border h-auto drop-shadow-[8px_0px_24px_rgba(86,93,152,0.12)]"
           >
             <div className="min-w-[233px] px-4 py-6 bg-blanco rounded-xl border-l-4 border-p500">
               <h5 className="text-ss font-bold">Datos de facturación</h5>
               <InputSelect
-                options={[
-                  { value: 0, label: "Recibo X" },
-                  { value: 1, label: "Factura A" },
-                  { value: 2, label: "Factura B" },
-                ]}
+                options={
+                  comprobantes &&
+                  comprobantes.map((item) => {
+                    return {
+                      value: item.id,
+                      label: item.nombre,
+                      code: item.codigo,
+                    }
+                  })
+                }
                 icon="image"
                 label="Tipo de comprobante"
                 // placeholder="Seleccioná un tipo de comprobante"
@@ -95,9 +221,17 @@ const PaymentSale = ({
               />
               <InputSelect
                 options={[
-                  "Consumidor final",
                   "IVA Responsable Inscripto",
-                  "Sujeto Excento",
+                  "IVA Sujeto Excento",
+                  "Consumidor final",
+                  "Responsable Monotributo",
+                  "Sujeto No Categorizado",
+                  "Proveedor del Exterior",
+                  "Cliente del Exterior",
+                  "IVA Liberado - Ley N° 19.640",
+                  "IVA Responsable Inscripto - Agente de Percepción",
+                  "Monotributista Social",
+                  "IVA No Alcanzado",
                 ]}
                 icon="image"
                 label="Condición frente al IVA"
@@ -205,12 +339,12 @@ const PaymentSale = ({
                 })}
             </div>
             {/* SUBTOTAL */}
-            <div className="flex items-center justify-between w-full h-[22px] border-b-[1px] border-gs200 text-bxs px-3">
+            <div className="flex items-center justify-between bg-p50 w-full h-[22px] border-b-[1px] border-gs200 text-bxs px-3">
               <span>Subtotal</span>
               <span>{formatPriceNumber(subtotal)}</span>
             </div>
             {/* DESCUENTOS */}
-            <div className="flex items-center justify-between w-full h-[22px] border-b-[1px] border-gs200 text-bxs px-3">
+            <div className="flex items-center justify-between bg-p50 w-full h-[22px] border-b-[1px] border-gs200 text-bxs px-3">
               <span>Descuentos</span>
               <span>
                 {formatPriceNumber(
@@ -218,7 +352,7 @@ const PaymentSale = ({
                 )}
               </span>
             </div>
-            <div className="flex items-center justify-between h-[37px] bg-p50 px-3">
+            <div className="flex items-center justify-between h-[37px] bg-p100 px-3">
               <p className="text-bs text-p700 font-bold">Total:</p>
               <p className="text-bs text-p700 font-bold">
                 {formatPriceNumber(total)}
@@ -253,22 +387,35 @@ const PaymentSale = ({
                     placeholder=""
                     label="Método"
                     selected={payMethod?.id}
-                    onChange={(value) => updatePayMethod("id", value)}
+                    onChange={(value) => {
+                      if (!payMethodSecondary?.active && value != 0) {
+                        updatePayMethod({
+                          id: value,
+                          payWith: total.toFixed(2),
+                        })
+                      } else {
+                        updatePayMethod("id", value)
+                      }
+                    }}
                     required
                   />
                 </div>
-                <div className="col-span-1">
+                <div className="relative col-span-1">
                   <InputText
                     inputRef={pagoRef}
                     placeholder="0.00"
-                    label="Paga con"
+                    label="Paga"
                     value={payMethod?.payWith}
-                    onChange={(value) => {
-                      if (isNaN(value)) return
-                      if (value.length > 11) return
-                      updatePayMethod("payWith", value)
-                    }}
+                    onChange={(value) => updatePago(value)}
+                    onFocus={() => setFocus(0)}
+                    disabled={payMethod?.id != 0 && true}
                   />
+                  <button
+                    className="absolute w-4 h-4 right-3 bottom-3 text-gs400 select-none"
+                    onClick={() => autocompletePay(0)}
+                  >
+                    <Icon svg="image" />
+                  </button>
                 </div>
               </div>
               {/* PAGO SECUNDARIO */}
@@ -309,17 +456,22 @@ const PaymentSale = ({
                           required
                         />
                       </div>
-                      <div className="col-span-1">
+                      <div className="relative col-span-1">
                         <InputText
+                          inputRef={pago2Ref}
                           placeholder="0.00"
-                          label="Paga con"
+                          label="Paga"
                           value={payMethodSecondary?.payWith}
-                          onChange={(value) => {
-                            if (isNaN(value)) return
-                            if (value.length > 11) return
-                            updatePayMethod("payWithSecondary", value)
-                          }}
+                          onChange={(value) => updatePago2(value)}
+                          onFocus={() => setFocus(1)}
+                          disabled={payMethod?.id != 0 && true}
                         />
+                        <button
+                          className="absolute w-4 h-4 right-3 bottom-3 text-gs400 select-none"
+                          onClick={() => autocompletePay(1)}
+                        >
+                          <Icon svg="image" />
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -327,11 +479,9 @@ const PaymentSale = ({
               )}
             </div>
             {/* VUELTO */}
-            <div className="flex items-center justify-between h-[37px] bg-p50 px-3">
+            <div className="flex items-center justify-between h-[37px] bg-p100 px-3">
               <p className="text-bs text-p700 font-bold">Su vuelto:</p>
-              <p className="text-bs text-p700 font-bold">
-                {formatPriceNumber(0)}
-              </p>
+              <p className="text-bs text-p700 font-bold">{suVuelto()}</p>
             </div>
           </div>
         </div>
@@ -359,34 +509,49 @@ const PaymentSale = ({
             animate={{ width: 202, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ type: "Inertia" }}
-            className="relative -left-2 top-3 h-auto overflow-x-auto drop-shadow-[8px_0px_24px_rgba(86,93,152,0.12)]"
+            className="relative -left-2 top-3 h-auto overflow-x-hidden drop-shadow-[8px_0px_24px_rgba(86,93,152,0.12)]"
           >
             <div className="min-w-[202px] box-border px-4 py-6 bg-blanco rounded-xl border-r-4 border-p500">
               <div className="grid grid-cols-3 h-[38px] rounded-lg border-[1px] border-p200">
-                <button className="col-span-1 h-full text-ss text-p800 font-bold border-r-[1px] border-p200 rounded-l-lg hover:bg-p500 hover:text-blanco">
+                <button
+                  onClick={() => insertPrice(200)}
+                  className="col-span-1 h-full text-ss text-p800 font-bold border-r-[1px] border-p200 rounded-l-lg hover:bg-p500 hover:text-blanco"
+                >
                   200
                 </button>
-                <button className="col-span-1 h-full text-ss text-p800 font-bold border-r-[1px] border-p200 hover:bg-p500 hover:text-blanco">
+                <button
+                  onClick={() => insertPrice(500)}
+                  className="col-span-1 h-full text-ss text-p800 font-bold border-r-[1px] border-p200 hover:bg-p500 hover:text-blanco"
+                >
                   500
                 </button>
-                <button className="col-span-1 h-full text-ss text-p800 font-bold rounded-r-lg hover:bg-p500 hover:text-blanco">
+                <button
+                  onClick={() => insertPrice(1000)}
+                  className="col-span-1 h-full text-ss text-p800 font-bold rounded-r-lg hover:bg-p500 hover:text-blanco"
+                >
                   1000
                 </button>
               </div>
               {/* NUMEROS */}
               <div className="grid grid-cols-3 h-[227px] rounded-lg border-[1px] border-p200 mt-2">
-                <KeyboardButton text={9} bR bB rTL />
-                <KeyboardButton text={8} bR bB />
-                <KeyboardButton text={7} bB rTR />
-                <KeyboardButton text={6} bR bB />
-                <KeyboardButton text={5} bR bB />
-                <KeyboardButton text={4} bB />
-                <KeyboardButton text={3} bR bB />
-                <KeyboardButton text={2} bR bB />
-                <KeyboardButton text={1} bB />
-                <KeyboardButton text={0} bR rBL />
-                <KeyboardButton text="." bR />
-                <KeyboardButton icon="borrar" rBR />
+                <KeyboardButton
+                  text={9}
+                  bR
+                  bB
+                  rTL
+                  action={() => insertKey(9)}
+                />
+                <KeyboardButton text={8} bR bB action={() => insertKey(8)} />
+                <KeyboardButton text={7} bB rTR action={() => insertKey(7)} />
+                <KeyboardButton text={6} bR bB action={() => insertKey(6)} />
+                <KeyboardButton text={5} bR bB action={() => insertKey(5)} />
+                <KeyboardButton text={4} bB action={() => insertKey(4)} />
+                <KeyboardButton text={3} bR bB action={() => insertKey(3)} />
+                <KeyboardButton text={2} bR bB action={() => insertKey(2)} />
+                <KeyboardButton text={1} bB action={() => insertKey(1)} />
+                <KeyboardButton text={0} bR rBL action={() => insertKey(0)} />
+                <KeyboardButton text="." bR action={() => insertKey(".")} />
+                <KeyboardButton icon="borrar" rBR action={() => removeKey()} />
               </div>
             </div>
           </motion.div>

@@ -10,6 +10,7 @@ export default function KeyboardButton({
   rTR,
   rBL,
   rBR,
+  action,
 }) {
   return (
     <button
@@ -18,6 +19,7 @@ export default function KeyboardButton({
       } ${bB && "border-b-[1px]"} ${rTL && "rounded-tl-lg"} ${
         rTR && "rounded-tr-lg"
       } ${rBL && "rounded-bl-lg"} ${rBR && "rounded-br-lg"}`}
+      onClick={() => action()}
     >
       {text && text}
       {icon && (

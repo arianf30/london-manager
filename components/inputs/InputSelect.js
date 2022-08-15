@@ -19,11 +19,6 @@ export const InputSelect = ({
       <label className="block text-ls text-gs700 mb-1 truncate">{label}</label>
 
       <div className="relative">
-        {icon && (
-          <div className="absolute left-4 top-[10px] h-5 w-5 text-gs400">
-            <Icon svg={icon} />
-          </div>
-        )}
         <select
           ref={inputRef || null}
           name={name}
@@ -49,7 +44,12 @@ export const InputSelect = ({
             )
           })}
         </select>
-        <div className="absolute h-5 w-5 right-3 top-[10px] text-gs500">
+        {icon && (
+          <div className="absolute left-4 top-[10px] h-5 w-5 text-gs400 pointer-events-none">
+            <Icon svg={icon} />
+          </div>
+        )}
+        <div className="absolute h-5 w-5 right-3 top-[10px] text-gs500 pointer-events-none">
           <Icon svg="arrowBottom" />
         </div>
       </div>

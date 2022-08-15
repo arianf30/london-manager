@@ -104,7 +104,6 @@ export default function PanelTables({
           ref={constraintsRef}
         >
           {mesas?.map((mesa, index) => {
-            console.log(mesa)
             if (mesa.id_salon === lounge) {
               return (
                 <motion.div
