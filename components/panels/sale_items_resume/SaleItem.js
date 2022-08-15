@@ -177,7 +177,7 @@ export default function SaleItem({
       )}
 
       {/* MENU COMANDA */}
-      {/* {item?.commands &&
+      {item?.commands &&
         item.commands.map((comm, index) => (
           <div
             key={`commands-${item.id}-${index}`}
@@ -212,7 +212,7 @@ export default function SaleItem({
               />
             </div>
           </div>
-        ))} */}
+        ))}
     </>
   )
 }
