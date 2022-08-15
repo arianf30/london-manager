@@ -184,9 +184,7 @@ export default function SaleItem({
             className="flex items-center justify-between h-7 w-full bg-p50 px-2 text-p800 text-bxs select-none"
           >
             <div className="flex items-center font-bold">
-              <div className="h-5 w-5 mr-2">
-                <Icon svg="clock" />
-              </div>
+              <div className="h-5 w-5 mr-2">{/* <Icon svg="clock" /> */}</div>
               Tiempo:{" "}
               {comm.delivered !== "" ? (
                 diffDate(comm.delivered, comm.date)
