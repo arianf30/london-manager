@@ -19,7 +19,7 @@ export const InputText = ({
         type="text"
         ref={inputRef || null}
         name={name}
-        value={value || ""}
+        value={value || undefined}
         className="flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs400 px-3 outline-none focus:shadow-[0_0_0_1px_rgba(86,93,152,1)]"
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
