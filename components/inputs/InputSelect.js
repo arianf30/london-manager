@@ -27,7 +27,7 @@ export const InputSelect = ({
           }`}
           onChange={(e) => onChange(e.target.value)}
           required={required}
-          defaultValue={selected || null}
+          defaultValue={selected || undefined}
         >
           {placeholder && (
             <option value="" disabled selected className="text-e500">
