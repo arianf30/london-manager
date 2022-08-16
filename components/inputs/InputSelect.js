@@ -8,7 +8,7 @@ export const InputSelect = ({
   selected,
   options,
   icon,
-  onChange = () => null,
+  onChange = () => undefined,
   error,
   descripcion,
   classes,
@@ -20,7 +20,7 @@ export const InputSelect = ({
 
       <div className="relative">
         <select
-          ref={inputRef || null}
+          ref={inputRef || undefined}
           name={name}
           className={`flex items-center w-full h-10 text-bs text-gs700 bg-gs100 border-[1px] border-p500 caret:p500 rounded-[4px] placeholder:text-gs-400 px-3 pr-10 outline-none focus:shadow-[0_0_0_1px_rgba(86,93,152,1)] appearance-none truncate ${
             icon && "pl-[44px]"
