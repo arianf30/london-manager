@@ -14,9 +14,11 @@ export default function usePrinter() {
   const { data, isLoading, isError } = useQuery(["printerConfig", pop], () =>
     getPrinterConfig(pop)
   )
-  let host = data?.data.host
-  let config = JSON.parse(data?.data.config)
-
+  let host = data?.data.host ?? ""
+  let config = ""
+  if (data?.data.config) {
+    config = JSON.parse(data?.data.config)
+  }
   const remotePrint = async (type, data) => {
     const promise = new Promise(async (resolve, reject) => {
       try {
