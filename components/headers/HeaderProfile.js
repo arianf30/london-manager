@@ -23,7 +23,7 @@ const DROPDOWN_OPTIONS = [
   {
     icon: "logOut",
     text: "Cerrar sesión",
-    action: () => signOut(),
+    action: () => signOut({ redirect: true, callbackUrl: "/logout" }),
   },
 ]
 

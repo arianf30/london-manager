@@ -1,16 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { signIn, getSession } from "next-auth/react"
 import Head from "next/head"
 import Link from "next/link"
 import Image from "next/image"
-import { Formik } from "formik"
 import { useRouter } from "next/router"
+import { useQueryClient } from "@tanstack/react-query"
+import { Formik } from "formik"
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false)
   const [error, setError] = useState(null)
 
   const router = useRouter()
+
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    queryClient.clear()
+  }, [])
 
   const toggleShowPass = () => {
     setShowPass(!showPass)

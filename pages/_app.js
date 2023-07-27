@@ -10,8 +10,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      // staleTime: Infinity,
+      // cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
 })
@@ -48,8 +48,7 @@ export default function App({
 }
 
 function Auth({ children }) {
-  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
-  const { data: session, status } = useSession({ required: true })
+  const { status } = useSession({ required: true })
   if (status === "loading") {
     return <div className="p-4">Espere...</div>
   }

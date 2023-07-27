@@ -1,19 +1,7 @@
-import { getSession, signOut } from "next-auth/react"
-import { useEffect } from "react"
-import { useRouter } from "next/router"
+import { getSession } from "next-auth/react"
 
-export default function Index({ user }) {
-  const router = useRouter()
-  useEffect(() => {
-    if (user) router.push("/profile")
-  }, [])
-
-  return (
-    <>
-      Signed in as {user.email} <br />
-      <button onClick={() => signOut()}>Sign out</button>
-    </>
-  )
+export default function Index() {
+  return
 }
 
 export const getServerSideProps = async (context) => {
@@ -28,8 +16,9 @@ export const getServerSideProps = async (context) => {
     }
 
   return {
-    props: {
-      user: session.user,
+    redirect: {
+      destination: "/profile",
+      permanent: false,
     },
   }
 }
